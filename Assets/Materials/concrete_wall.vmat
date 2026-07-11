@@ -1,0 +1,22 @@
+﻿{
+  "Name": "concrete_wall",
+  "Version": "2.0",
+  "BaseColor": [ 1, 1, 1, 1 ],
+  "Metallic": 0,
+  "Roughness": 1,
+  "AmbientOcclusion": 1,
+  "NormalStrength": 1,
+  "HeightScale": 0.0,
+  "AlphaCutoff": 0.5,
+  "UseDirectXNormals": true,
+  "EmissiveStrength": 0.0,
+  "TwoSided": false,
+  "BlendMode": "Opaque",
+  "CastShadows": true,
+  "ReceiveShadows": true,
+  "AlbedoTexture": "../Textures/concrete_wall_008/concrete_wall_008_diff_2k.jpg",
+  "NormalTexture": "../Textures/concrete_wall_008/concrete_wall_008_nor_dx_2k.jpg",
+  "RoughnessTexture": "../Textures/concrete_wall_008/concrete_wall_008_rough_2k.jpg",
+  "UVTiling": [ 6, 2 ],
+  "UVOffset": [ 0, 0 ]
+}

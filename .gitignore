@@ -1,0 +1,19 @@
+# Vortex Engine project — build output & editor scratch
+obj/
+bin/
+.vs/
+x64/
+*.user
+*.suo
+*.tmp
+
+# OS
+Thumbs.db
+Desktop.ini
+.DS_Store
+
+# Editor scratch / regenerable caches
+Library/
+.ve/
+Build/
+*.vmeta.bak

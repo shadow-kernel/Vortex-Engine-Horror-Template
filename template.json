@@ -1,7 +1,7 @@
 {
   "name": "Horror Starter",
-  "tagline": "First-person horror kit — flashlight, interaction, jump scare",
-  "description": "A ready-to-play first-person horror foundation: Quake-feel FP controller with pause overlay, battery-drained flashlight that casts real shadows, [E] interaction with a sliding door, material-driven footsteps, and a scripted jump scare (trigger volume + spawned stalker + post-FX panic ramp). Fog, vignette and film grain are authored per scene in the Environment panel — everything gameplay lives in plain project scripts you can read and change.",
+  "tagline": "CoD-feel cellar shooter — walk, aim, shoot in a lit brick basement",
+  "description": "A ready-to-play first-person cellar shooter with Call-of-Duty-style feel: snappy grounded WASD movement with sprint, crouch, slide and jump; mouse-look; a held automatic weapon with ADS, recoil pattern, muzzle flash, shell ejection and reload; and a full closed brick-and-concrete basement (generator hall, side stores, spawn hall, sliding doors) lit by warm flickering bulbs, a key light and real point/spot lighting, with fog, bloom, SSAO and grain. Everything gameplay lives in plain project scripts you can read and change — movement, weapon and lighting are all VortexBehaviour scripts.",
   "preview": "preview.png",
   "project": ".",
   "order": 1

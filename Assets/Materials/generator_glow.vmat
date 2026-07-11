@@ -1,0 +1,12 @@
+{
+  "Name": "generator_glow",
+  "Version": "2.0",
+  "BaseColor": [ 1, 0.45, 0.18, 1 ],
+  "Metallic": 0, "Roughness": 0.4, "AmbientOcclusion": 1, "NormalStrength": 1,
+  "HeightScale": 0.0, "AlphaCutoff": 0.5, "UseDirectXNormals": true,
+  "EmissiveStrength": 2.2, "EmissiveColor": [ 1, 0.45, 0.18 ],
+  "TwoSided": false, "BlendMode": "Opaque", "ShaderType": "Unlit",
+  "CastShadows": false, "ReceiveShadows": false,
+  "AlbedoTexture": "../Textures/gun/generator_glow.png",
+  "UVTiling": [ 1, 1 ], "UVOffset": [ 0, 0 ]
+}

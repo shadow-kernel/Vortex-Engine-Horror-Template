@@ -1,0 +1,128 @@
+{
+ "id": "a7b8c9d0-1122-4334-9556-77e8f9a0b101",
+ "name": "Weapon_Vityaz",
+ "isActive": true,
+ "isStatic": false,
+ "layer": 0,
+ "tag": "Untagged",
+ "children": [
+  {
+   "id": "73444f1c-ff4f-41c7-8106-22490352d693",
+   "name": "Mag",
+   "isActive": true,
+   "isStatic": false,
+   "layer": 0,
+   "tag": "Untagged",
+   "children": [],
+   "components": [
+    {
+     "__type": "Transform",
+     "id": "07c1210c-c580-4f15-b723-83b5ba56c576",
+     "isEnabled": true,
+     "localPosition": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+     },
+     "localRotation": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+     },
+     "localScale": {
+      "x": 1,
+      "y": 1,
+      "z": 1
+     }
+    },
+    {
+     "__type": "MeshRenderer",
+     "id": "176ac1b5-b6e4-4f56-809b-104c289ea8c9",
+     "isEnabled": true,
+     "meshPath": "Assets/Models/Viewmodel/vm_vityaz_mag.glb",
+     "materialPath": null,
+     "castShadows": true,
+     "receiveShadows": true,
+     "renderLayer": 0,
+     "colorR": 0.22,
+     "colorG": 0.23,
+     "colorB": 0.25,
+     "colorA": 1,
+     "metallic": 0.55,
+     "roughness": 0.42,
+     "normalStrength": 1,
+     "texturePath": null,
+     "shaderPath": null
+    }
+   ],
+   "isFolder": false,
+   "prefabPath": null,
+   "isLockedToParent": true
+  }
+ ],
+ "components": [
+  {
+   "__type": "Transform",
+   "id": "a7b8c9d0-1122-4334-9556-77e8f9a0b102",
+   "isEnabled": true,
+   "localPosition": {
+    "x": 0,
+    "y": 0,
+    "z": 0
+   },
+   "localRotation": {
+    "x": 0,
+    "y": 0,
+    "z": 0
+   },
+   "localScale": {
+    "x": 1,
+    "y": 1,
+    "z": 1
+   }
+  },
+  {
+   "__type": "MeshRenderer",
+   "id": "a7b8c9d0-1122-4334-9556-77e8f9a0b103",
+   "isEnabled": true,
+   "meshPath": "Assets/Models/Viewmodel/vm_vityaz_body.glb",
+   "materialPath": null,
+   "castShadows": true,
+   "receiveShadows": true,
+   "renderLayer": 0,
+   "colorR": 0.25,
+   "colorG": 0.26,
+   "colorB": 0.28,
+   "colorA": 1,
+   "metallic": 0.5,
+   "roughness": 0.4,
+   "normalStrength": 1,
+   "texturePath": null,
+   "shaderPath": null
+  },
+  {
+   "__type": "Script",
+   "id": "a7b8c9d0-1122-4334-9556-77e8f9a0b104",
+   "isEnabled": true,
+   "scriptPath": "Assets/Scripts/Weapons/AssaultRifle.cs",
+   "scriptClassName": "AssaultRifle",
+   "fieldValues": [
+    {
+     "name": "WeaponName",
+     "value": "Vityaz"
+    },
+    {
+     "name": "Damage",
+     "value": "26"
+    },
+    {
+     "name": "FireRate",
+     "value": "700"
+    }
+   ]
+  }
+ ],
+ "isFolder": false,
+ "prefabPath": null,
+ "isLockedToParent": false
+}

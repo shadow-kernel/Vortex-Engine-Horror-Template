@@ -11,8 +11,11 @@ public class FlashlightController : VortexBehaviour
     public float RechargePerSec = 0.35f;
     public float LowBatteryPct  = 22f;
     public float Intensity      = 40f;
+    public bool  StartOn        = false;   // the cellar is lamp-lit; the flashlight starts OFF (F toggles).
+                                           // NB: a spot light 0.2 m in front of the camera acts as a fill
+                                           // light ON the gun -> point-blank inverse-square blows it white.
 
-    private bool  _on = true;
+    private bool  _on = false;
     private float _battery;
     private bool  _fHeld;
     private float _flickerT;
@@ -20,7 +23,7 @@ public class FlashlightController : VortexBehaviour
     public override void Start()
     {
         _battery = MaxBattery;
-        _on = true;
+        _on = StartOn;
         ApplyToLight();
     }
 
@@ -73,14 +76,25 @@ public class FlashlightController : VortexBehaviour
     {
         float W = UI.Width, H = UI.Height;
         if (W < 10f) return;
-        float x = 24f, y = H - 44f, w = 150f, h = 20f;
-        float pct = _battery / MaxBattery;
-        Color fill = _battery <= 0f ? Color.Rgb(120, 30, 30)
-                   : _battery < LowBatteryPct ? Color.Rgb(200, 140, 40)
-                   : Color.Rgb(120, 200, 150);
-        UI.Rect(x, y, w, h, Color.Rgba(15, 15, 18, 200), 5f);
-        UI.Rect(x + 3f, y + 3f, (w - 6f) * (pct < 0f ? 0f : pct), h - 6f, fill, 3f);
-        string label = _on ? (_battery <= 0f ? "DEAD" : "FLASHLIGHT [F]") : "OFF [F]";
-        UI.Text(label, x, y - 20f, w + 40f, 16f, 12f, Color.Rgba(200, 200, 205, 220), 0, 600);
+        // coherent with the weapon HUD: dark ink panel + drop shadow + hairline + muted accents
+        float pw = 190f, ph = 48f, px = 22f, py = H - ph - 22f;
+        UI.Rect(px + 3f, py + 4f, pw, ph, Color.Rgba(0, 0, 0, 90), 12f);
+        UI.Rect(px, py, pw, ph, Color.Rgba(11, 13, 18, 188), 12f);
+        UI.Rect(px + 14f, py + 10f, pw - 28f, 1.5f, Color.Rgba(255, 255, 255, 26), 1f);
+
+        float pct = _battery / MaxBattery; if (pct < 0f) pct = 0f;
+        Color fill = _battery <= 0f ? Color.Rgba(240, 82, 82, 235)
+                   : _battery < LowBatteryPct ? Color.Rgba(240, 150, 70, 235)
+                   : Color.Rgba(122, 176, 150, 225);
+        // label row
+        UI.Text("FLASHLIGHT", px + 16f, py + 13f, 120f, 14f, 11.5f, Color.Rgba(150, 159, 174, 235), 0, 700);
+        string state = _on ? (_battery <= 0f ? "DEPLETED" : "ON  ·  [F]") : "OFF  ·  [F]";
+        Color sc = _battery <= 0f ? Color.Rgba(240, 82, 82, 235)
+                 : _on ? Color.Rgba(122, 152, 190, 220) : Color.Rgba(120, 128, 140, 200);
+        UI.Text(state, px + pw - 100f, py + 13f, 84f, 14f, 11.5f, sc, 2, 700);
+        // battery bar
+        float bx = px + 16f, by = py + ph - 15f, bw = pw - 32f, bh = 7f;
+        UI.Rect(bx, by, bw, bh, Color.Rgba(38, 40, 48, 180), 3f);
+        UI.Rect(bx, by, bw * pct, bh, fill, 3f);
     }
 }

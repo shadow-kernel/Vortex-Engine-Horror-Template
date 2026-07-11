@@ -1,0 +1,125 @@
+{
+  "id": "b0c1d2e3-f405-4617-8829-a0b1c2d3e4f5",
+  "name": "soldier",
+  "isActive": true,
+  "isStatic": false,
+  "layer": 0,
+  "tag": "Untagged",
+  "children": [
+    {
+      "id": "b0c1d2e3-f405-4617-8829-a0b1c2d3e401",
+      "name": "vanguard_Mesh",
+      "isActive": true,
+      "isStatic": false,
+      "layer": 0,
+      "tag": "Untagged",
+      "children": [ ],
+      "components": [
+        {
+          "__type": "Transform",
+          "id": "b0c1d2e3-f405-4617-8829-a0b1c2d3e402",
+          "isEnabled": true,
+          "localPosition": { "x": 0, "y": 0, "z": 0 },
+          "localRotation": { "x": 0, "y": 0, "z": 0 },
+          "localScale": { "x": 1, "y": 1, "z": 1 }
+        },
+        {
+          "__type": "MeshRenderer",
+          "id": "b0c1d2e3-f405-4617-8829-a0b1c2d3e403",
+          "isEnabled": true,
+          "meshPath": "Assets/Models/Character/tp_character.glb#submesh0",
+          "materialPath": null,
+          "castShadows": true,
+          "receiveShadows": true,
+          "renderLayer": 0,
+          "colorR": 0.82,
+          "colorG": 0.82,
+          "colorB": 0.85,
+          "colorA": 1,
+          "metallic": 0,
+          "roughness": 0.6,
+          "normalStrength": 1,
+          "texturePath": null,
+          "shaderPath": null
+        }
+      ],
+      "isFolder": false,
+      "prefabPath": null,
+      "isLockedToParent": true
+    },
+    {
+      "id": "b0c1d2e3-f405-4617-8829-a0b1c2d3e410",
+      "name": "vanguard_visor",
+      "isActive": true,
+      "isStatic": false,
+      "layer": 0,
+      "tag": "Untagged",
+      "children": [ ],
+      "components": [
+        {
+          "__type": "Transform",
+          "id": "b0c1d2e3-f405-4617-8829-a0b1c2d3e411",
+          "isEnabled": true,
+          "localPosition": { "x": 0, "y": 0, "z": 0 },
+          "localRotation": { "x": 0, "y": 0, "z": 0 },
+          "localScale": { "x": 1, "y": 1, "z": 1 }
+        },
+        {
+          "__type": "MeshRenderer",
+          "id": "b0c1d2e3-f405-4617-8829-a0b1c2d3e412",
+          "isEnabled": true,
+          "meshPath": "Assets/Models/Character/tp_character.glb#submesh1",
+          "materialPath": null,
+          "castShadows": true,
+          "receiveShadows": true,
+          "renderLayer": 0,
+          "colorR": 0.2,
+          "colorG": 0.22,
+          "colorB": 0.28,
+          "colorA": 1,
+          "metallic": 0.3,
+          "roughness": 0.35,
+          "normalStrength": 1,
+          "texturePath": null,
+          "shaderPath": null
+        }
+      ],
+      "isFolder": false,
+      "prefabPath": null,
+      "isLockedToParent": true
+    }
+  ],
+  "components": [
+    {
+      "__type": "Transform",
+      "id": "b0c1d2e3-f405-4617-8829-a0b1c2d3e420",
+      "isEnabled": true,
+      "localPosition": { "x": 0, "y": 0, "z": 0 },
+      "localRotation": { "x": 0, "y": 0, "z": 0 },
+      "localScale": { "x": 0.01, "y": 0.01, "z": 0.01 }
+    },
+    {
+      "__type": "Animator",
+      "id": "b0c1d2e3-f405-4617-8829-a0b1c2d3e421",
+      "isEnabled": true,
+      "clips": [
+        { "name": "idle", "path": "Assets/Models/Character/animations/soldier_idle.vanim" },
+        { "name": "walk", "path": "Assets/Models/Character/animations/soldier_walk.vanim" },
+        { "name": "run",  "path": "Assets/Models/Character/animations/soldier_run.vanim" }
+      ],
+      "defaultClip": "walk",
+      "playOnStart": true,
+      "speed": 1
+    },
+    {
+      "__type": "Script",
+      "id": "b0c1d2e3-f405-4617-8829-a0b1c2d3e430",
+      "isEnabled": true,
+      "scriptPath": "Assets/Scripts/Player/LocomotionController.cs",
+      "scriptClassName": "LocomotionController"
+    }
+  ],
+  "isFolder": false,
+  "prefabPath": null,
+  "isLockedToParent": false
+}

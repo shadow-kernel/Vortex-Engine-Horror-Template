@@ -1,0 +1,41 @@
+{
+  "id": "c1d2e3f4-0506-4718-8939-b0c1d2e3f501",
+  "name": "npc_gun",
+  "isActive": true,
+  "isStatic": false,
+  "layer": 0,
+  "tag": "Untagged",
+  "children": [ ],
+  "components": [
+    {
+      "__type": "Transform",
+      "id": "c1d2e3f4-0506-4718-8939-b0c1d2e3f502",
+      "isEnabled": true,
+      "localPosition": { "x": 0, "y": 0, "z": 0 },
+      "localRotation": { "x": 0, "y": 0, "z": 0 },
+      "localScale": { "x": 1, "y": 1, "z": 1 }
+    },
+    {
+      "__type": "MeshRenderer",
+      "id": "c1d2e3f4-0506-4718-8939-b0c1d2e3f503",
+      "isEnabled": true,
+      "meshPath": "Assets/Models/Viewmodel/vm_vityaz_body.glb",
+      "materialPath": null,
+      "castShadows": true,
+      "receiveShadows": true,
+      "renderLayer": 0,
+      "colorR": 0.25,
+      "colorG": 0.26,
+      "colorB": 0.28,
+      "colorA": 1,
+      "metallic": 0.5,
+      "roughness": 0.4,
+      "normalStrength": 1,
+      "texturePath": null,
+      "shaderPath": null
+    }
+  ],
+  "isFolder": false,
+  "prefabPath": null,
+  "isLockedToParent": false
+}

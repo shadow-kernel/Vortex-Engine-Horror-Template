@@ -1,0 +1,23 @@
+﻿{
+  "Name": "concrete_floor",
+  "Version": "2.0",
+  "BaseColor": [ 1, 1, 1, 1 ],
+  "Metallic": 0,
+  "Roughness": 1,
+  "AmbientOcclusion": 1,
+  "NormalStrength": 1,
+  "HeightScale": 0.0,
+  "AlphaCutoff": 0.5,
+  "UseDirectXNormals": true,
+  "EmissiveStrength": 0.0,
+  "TwoSided": false,
+  "BlendMode": "Opaque",
+  "CastShadows": true,
+  "ReceiveShadows": true,
+  "AlbedoTexture": "../Textures/concrete_floor_02/concrete_floor_02_diff_2k.jpg",
+  "NormalTexture": "../Textures/concrete_floor_02/concrete_floor_02_nor_dx_2k.jpg",
+  "RoughnessTexture": "../Textures/concrete_floor_02/concrete_floor_02_rough_2k.jpg",
+  "FootstepSound": "Assets/Audio/step_concrete.wav",
+  "UVTiling": [ 14, 16 ],
+  "UVOffset": [ 0, 0 ]
+}

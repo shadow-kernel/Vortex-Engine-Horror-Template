@@ -1,0 +1,40 @@
+{
+  "Name": "9mm_Bullet_Pack01_0",
+  "Version": "2.0",
+  "BaseColor": [
+    1,
+    1,
+    1,
+    1
+  ],
+  "Metallic": 1,
+  "Roughness": 1,
+  "AmbientOcclusion": 1,
+  "NormalStrength": 1,
+  "HeightScale": 0.0500000007,
+  "AlphaCutoff": 0.5,
+  "UseDirectXNormals": true,
+  "AlbedoTexture": "..\\*0",
+  "NormalTexture": "..\\*2",
+  "MetallicTexture": "..\\*1",
+  "RoughnessTexture": "..\\*1",
+  "EmissiveStrength": 0,
+  "EmissiveColor": [
+    0,
+    0,
+    0
+  ],
+  "TwoSided": false,
+  "BlendMode": "Opaque",
+  "ShaderType": "StandardPBR",
+  "CastShadows": true,
+  "ReceiveShadows": true,
+  "UVTiling": [
+    1,
+    1
+  ],
+  "UVOffset": [
+    0,
+    0
+  ]
+}

@@ -2,10 +2,10 @@
   "id": "9d7e2f10-4b3c-4a51-8e62-1f0a9b8c7601",
   "name": "Horror Starter",
   "version": "1.0.0",
-  "engineVersion": "2.6.11",
-  "lastModified": "\/Date(1783248790803+0200)\/",
-  "createdAt": "\/Date(1783248790809+0200)\/",
-  "thumbnailPath": null,
+  "engineVersion": "2.7.0",
+  "lastModified": "/Date(1783774899166+0200)/",
+  "createdAt": "/Date(1783774899174+0200)/",
+  "thumbnailPath": "C:\\Users\\Administrator\\Documents\\GitHub\\Vortex-Engine\\Templates\\HorrorStarter\\.ve\\icon.png",
   "startSceneId": "9d7e2f10-4b3c-4a51-8e62-1f0a9b8c7701",
   "lastOpenSceneId": "9d7e2f10-4b3c-4a51-8e62-1f0a9b8c7701",
   "formatVersion": 2,
@@ -15,11 +15,17 @@
       "name": "Demo",
       "path": "Demo.vscene",
       "loadOnStart": false
+    },
+    {
+      "id": "1be0e83a-aefe-4d8d-9f94-b6f1a6ec7af9",
+      "name": "New Scene 2",
+      "path": "New Scene 2.vscene",
+      "loadOnStart": false
     }
   ],
   "settings": {
     "companyName": "DefaultCompany",
-    "productName": "Horror Starter",
+    "productName": "My Game",
     "defaultScreenWidth": 1920,
     "defaultScreenHeight": 1080,
     "fullscreenByDefault": false,

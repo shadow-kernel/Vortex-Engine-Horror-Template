@@ -1,0 +1,6 @@
+{ "Name": "sleeve", "Version": "2.0", "BaseColor": [ 1, 1, 1, 1 ],
+  "Metallic": 0.1, "Roughness": 0.85, "AmbientOcclusion": 1, "NormalStrength": 1,
+  "HeightScale": 0.0, "UseDirectXNormals": true, "EmissiveStrength": 0.0,
+  "TwoSided": false, "BlendMode": "Opaque", "CastShadows": false, "ReceiveShadows": true,
+  "AlbedoTexture": "../Textures/gun/sleeve.png",
+  "UVTiling": [ 1, 1 ], "UVOffset": [ 0, 0 ] }

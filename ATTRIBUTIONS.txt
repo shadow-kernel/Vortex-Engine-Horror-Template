@@ -1,0 +1,24 @@
+Vortex Horror Starter — Third-Party Asset Attributions
+=======================================================
+
+The first-person weapon and arms models are used under Creative Commons
+Attribution 4.0 (CC-BY 4.0). Credit is required and given below.
+
+WEAPON — "Bullpup Rifle"
+  Author:  mirz1911 (Sketchfab)
+  Source:  https://sketchfab.com/3d-models/bullpup-rifle-7156954c0d7144af87ce8f101696a46a
+  License: CC-BY 4.0  (https://creativecommons.org/licenses/by/4.0/)
+
+FIRST-PERSON ARMS — "First Person arms"
+  Author:  DJMaesen (bumstrum) (Sketchfab)
+  Source:  https://sketchfab.com/3d-models/first-person-arms-e3c42c05b22944e5839deb8e003f0987
+  License: CC-BY 4.0  (https://creativecommons.org/licenses/by/4.0/)
+
+Modifications: models were re-scaled, re-oriented, combined into a single
+first-person viewmodel, and (weapon) retinted toward FDE for this template.
+
+-------------------------------------------------------
+Procedurally generated / CC0 (public domain), no attribution required:
+  - All level geometry (engine primitives) and the map layout.
+  - PBR textures for the environment: ambientCG & Poly Haven (CC0 1.0).
+  - Gun/reload/ambience audio: procedurally synthesized for this template.

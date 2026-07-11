@@ -1,0 +1,403 @@
+﻿{
+  "id": "930c0617-c0ad-40bc-b240-7c2d6acb274b",
+  "name": "WCharakter",
+  "isActive": true,
+  "isStatic": false,
+  "layer": 0,
+  "tag": "Untagged",
+  "children": [
+    {
+      "id": "a936af90-4b7c-4cf1-b028-7d6c60780c80",
+      "name": "Meshes",
+      "isActive": true,
+      "isStatic": false,
+      "layer": 0,
+      "tag": "Untagged",
+      "children": [
+        {
+          "id": "0cd841d7-5da7-458e-9303-e1cc49d3254a",
+          "name": "Beta_Surface",
+          "isActive": true,
+          "isStatic": false,
+          "layer": 0,
+          "tag": "Untagged",
+          "children": [ ],
+          "components": [
+            {
+              "__type": "Transform",
+              "id": "764c2b46-877f-49b2-8f82-17385f68ffc1",
+              "isEnabled": true,
+              "localPosition": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+              },
+              "localRotation": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+              },
+              "localScale": {
+                "x": 1,
+                "y": 1,
+                "z": 1
+              }
+            },
+            {
+              "__type": "MeshRenderer",
+              "id": "4e3a4225-816b-4696-b73d-fc648e77b63a",
+              "isEnabled": true,
+              "meshPath": "Assets\/Models\/Character\/tp_character.glb#submesh1",
+              "materialPath": null,
+              "castShadows": true,
+              "receiveShadows": true,
+              "renderLayer": 2,
+              "colorR": 0.7,
+              "colorG": 0.7,
+              "colorB": 0.7,
+              "colorA": 1,
+              "metallic": 0,
+              "roughness": 0.5,
+              "normalStrength": 1,
+              "texturePath": null,
+              "shaderPath": null
+            }
+          ],
+          "isFolder": false,
+          "prefabPath": null,
+          "isLockedToParent": true
+        },
+        {
+          "id": "c1b4a5d0-7e28-4650-8677-85565bf34ddc",
+          "name": "Beta_Joints",
+          "isActive": true,
+          "isStatic": false,
+          "layer": 0,
+          "tag": "Untagged",
+          "children": [ ],
+          "components": [
+            {
+              "__type": "Transform",
+              "id": "1db6b45f-9096-402e-b54c-51b8c33a308c",
+              "isEnabled": true,
+              "localPosition": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+              },
+              "localRotation": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+              },
+              "localScale": {
+                "x": 1,
+                "y": 1,
+                "z": 1
+              }
+            },
+            {
+              "__type": "MeshRenderer",
+              "id": "f621b3d5-88bf-448c-a21c-c0c17cc5a4d9",
+              "isEnabled": true,
+              "meshPath": "Assets\/Models\/Character\/tp_character.glb#submesh0",
+              "materialPath": null,
+              "castShadows": true,
+              "receiveShadows": true,
+              "renderLayer": 2,
+              "colorR": 0.7,
+              "colorG": 0.7,
+              "colorB": 0.7,
+              "colorA": 1,
+              "metallic": 0,
+              "roughness": 0.5,
+              "normalStrength": 1,
+              "texturePath": null,
+              "shaderPath": null
+            }
+          ],
+          "isFolder": false,
+          "prefabPath": null,
+          "isLockedToParent": true
+        }
+      ],
+      "components": [
+        {
+          "__type": "Transform",
+          "id": "76dd22ad-bc74-44fc-9b86-0f6c95f623f1",
+          "isEnabled": true,
+          "localPosition": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "localRotation": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "localScale": {
+            "x": 1,
+            "y": 1,
+            "z": 1
+          }
+        }
+      ],
+      "isFolder": false,
+      "prefabPath": null,
+      "isLockedToParent": false
+    },
+    {
+      "id": "b4abd090-1328-4905-947a-ca91ef83fb23",
+      "name": "MainWeapon",
+      "isActive": true,
+      "isStatic": false,
+      "layer": 0,
+      "tag": "Untagged",
+      "children": [ ],
+      "components": [
+        {
+          "__type": "Transform",
+          "id": "0d7e64c0-24ec-447e-bb36-830a49b99e9a",
+          "isEnabled": true,
+          "localPosition": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "localRotation": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "localScale": {
+            "x": 1,
+            "y": 1,
+            "z": 1
+          }
+        },
+        {
+          "__type": "MeshRenderer",
+          "id": "1c56acbd-a630-4831-aabf-7b7ec05149b9",
+          "isEnabled": true,
+          "meshPath": null,
+          "materialPath": null,
+          "castShadows": true,
+          "receiveShadows": true,
+          "renderLayer": 2,
+          "colorR": 0.7,
+          "colorG": 0.7,
+          "colorB": 0.7,
+          "colorA": 1,
+          "metallic": 0,
+          "roughness": 0.5,
+          "normalStrength": 1,
+          "texturePath": null,
+          "shaderPath": null
+        },
+        {
+          "__type": "BoneAttachment",
+          "id": "b7f092d5-6f03-4d6e-b435-e5e01aefbb7b",
+          "isEnabled": true,
+          "targetEntityId": "",
+          "boneName": "mixamorig:RightArm",
+          "offsetPosition": {
+            "x": 0.37,
+            "y": 0.22,
+            "z": 0.045
+          },
+          "offsetRotation": {
+            "x": 193,
+            "y": -106,
+            "z": 0
+          },
+          "offsetScale": {
+            "x": 1,
+            "y": 1,
+            "z": 1
+          },
+          "socketPrefabPath": "Assets\/Prefabs\/npc_gun.ventity",
+          "socketRenderLayer": 2
+        }
+      ],
+      "isFolder": false,
+      "prefabPath": null,
+      "isLockedToParent": false
+    }
+  ],
+  "components": [
+    {
+      "__type": "Transform",
+      "id": "67b89c9f-f5cf-4a4a-a82c-127570c9b771",
+      "isEnabled": true,
+      "localPosition": {
+        "x": 0,
+        "y": -1.6715374,
+        "z": 0
+      },
+      "localRotation": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      },
+      "localScale": {
+        "x": 0.01,
+        "y": 0.01,
+        "z": 0.01
+      }
+    },
+    {
+      "__type": "Animator",
+      "id": "1fa3a95b-6fb7-42a5-a8cf-982319394b3b",
+      "isEnabled": true,
+      "clips": [
+        {
+          "name": "aim",
+          "path": "Assets\/Models\/Character\/animations\/aim.vanim"
+        },
+        {
+          "name": "death",
+          "path": "Assets\/Models\/Character\/animations\/death.vanim"
+        },
+        {
+          "name": "fire",
+          "path": "Assets\/Models\/Character\/animations\/fire.vanim"
+        },
+        {
+          "name": "Idle",
+          "path": "Assets\/Models\/Character\/animations\/Idle.vanim"
+        },
+        {
+          "name": "jump",
+          "path": "Assets\/Models\/Character\/animations\/jump.vanim"
+        },
+        {
+          "name": "jump_back",
+          "path": "Assets\/Models\/Character\/animations\/jump_back.vanim"
+        },
+        {
+          "name": "rifle_aim",
+          "path": "Assets\/Models\/Character\/animations\/rifle_aim.vanim"
+        },
+        {
+          "name": "rifle_fire",
+          "path": "Assets\/Models\/Character\/animations\/rifle_fire.vanim"
+        },
+        {
+          "name": "rifle_hold",
+          "path": "Assets\/Models\/Character\/animations\/rifle_hold.vanim"
+        },
+        {
+          "name": "rifle_idle",
+          "path": "Assets\/Models\/Character\/animations\/rifle_idle.vanim"
+        },
+        {
+          "name": "rifle_reload",
+          "path": "Assets\/Models\/Character\/animations\/rifle_reload.vanim"
+        },
+        {
+          "name": "rifle_run",
+          "path": "Assets\/Models\/Character\/animations\/rifle_run.vanim"
+        },
+        {
+          "name": "run",
+          "path": "Assets\/Models\/Character\/animations\/run.vanim"
+        },
+        {
+          "name": "run_back",
+          "path": "Assets\/Models\/Character\/animations\/run_back.vanim"
+        },
+        {
+          "name": "soldier_idle",
+          "path": "Assets\/Models\/Character\/animations\/soldier_idle.vanim"
+        },
+        {
+          "name": "soldier_idle_ip",
+          "path": "Assets\/Models\/Character\/animations\/soldier_idle_ip.vanim"
+        },
+        {
+          "name": "soldier_run",
+          "path": "Assets\/Models\/Character\/animations\/soldier_run.vanim"
+        },
+        {
+          "name": "soldier_run_ip",
+          "path": "Assets\/Models\/Character\/animations\/soldier_run_ip.vanim"
+        },
+        {
+          "name": "soldier_walk",
+          "path": "Assets\/Models\/Character\/animations\/soldier_walk.vanim"
+        },
+        {
+          "name": "soldier_walk_ip",
+          "path": "Assets\/Models\/Character\/animations\/soldier_walk_ip.vanim"
+        },
+        {
+          "name": "strafe_l",
+          "path": "Assets\/Models\/Character\/animations\/strafe_l.vanim"
+        },
+        {
+          "name": "strafe_r",
+          "path": "Assets\/Models\/Character\/animations\/strafe_r.vanim"
+        },
+        {
+          "name": "walk",
+          "path": "Assets\/Models\/Character\/animations\/walk.vanim"
+        },
+        {
+          "name": "walk_back",
+          "path": "Assets\/Models\/Character\/animations\/walk_back.vanim"
+        },
+        {
+          "name": "walk_back_start",
+          "path": "Assets\/Models\/Character\/animations\/walk_back_start.vanim"
+        },
+        {
+          "name": "walk_back_stop",
+          "path": "Assets\/Models\/Character\/animations\/walk_back_stop.vanim"
+        },
+        {
+          "name": "walk_start",
+          "path": "Assets\/Models\/Character\/animations\/walk_start.vanim"
+        },
+        {
+          "name": "walk_stop",
+          "path": "Assets\/Models\/Character\/animations\/walk_stop.vanim"
+        }
+      ],
+      "defaultClip": "aim",
+      "playOnStart": true,
+      "speed": 1
+    },
+    {
+      "__type": "Script",
+      "id": "282235c1-4cdb-4d5d-8f4f-c1aa7af32dc0",
+      "isEnabled": true,
+      "scriptPath": "Assets\/Scripts\/Player\/LocomotionController.cs",
+      "scriptClassName": "LocomotionController"
+    },
+    {
+      "__type": "TwoBoneIk",
+      "id": "2ce93da1-52cf-41f5-975c-b24ca1f39648",
+      "isEnabled": true,
+      "tipBone": "mixamorig:LeftHand",
+      "targetBone": "mixamorig:RightHand",
+      "targetOffsetPosition": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      },
+      "targetOffsetRotation": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      },
+      "weight": 1,
+      "poleAngle": 0,
+      "applyTipRotation": true,
+      "autoGrip": true
+    }
+  ],
+  "isFolder": false,
+  "prefabPath": null,
+  "isLockedToParent": false
+}

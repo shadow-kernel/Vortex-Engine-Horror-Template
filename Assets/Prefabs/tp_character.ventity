@@ -1,0 +1,166 @@
+{
+  "id": "a137968b-e3d0-495b-8d28-e0d8d0a66c57",
+  "name": "tp_character",
+  "isActive": true,
+  "isStatic": false,
+  "layer": 0,
+  "tag": "Untagged",
+  "children": [
+    {
+      "id": "3abffdbc-0b50-4fe4-aca2-f183192647f2",
+      "name": "Beta_Joints",
+      "isActive": true,
+      "isStatic": false,
+      "layer": 0,
+      "tag": "Untagged",
+      "children": [ ],
+      "components": [
+        {
+          "__type": "Transform",
+          "id": "4950a607-e3fc-4dff-8925-2ca43e6e73e6",
+          "isEnabled": true,
+          "localPosition": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "localRotation": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "localScale": {
+            "x": 1,
+            "y": 1,
+            "z": 1
+          }
+        },
+        {
+          "__type": "MeshRenderer",
+          "id": "0ea5fada-a5e7-4d8b-b64f-4c0c584d0f29",
+          "isEnabled": true,
+          "meshPath": "Assets\/Models\/Character\/tp_character.glb#submesh0",
+          "materialPath": null,
+          "castShadows": false,
+          "receiveShadows": false,
+          "renderLayer": 1,
+          "colorR": 0.7,
+          "colorG": 0.7,
+          "colorB": 0.7,
+          "colorA": 1,
+          "metallic": 0,
+          "roughness": 0.5,
+          "normalStrength": 1,
+          "texturePath": null,
+          "shaderPath": null
+        }
+      ],
+      "isFolder": false,
+      "prefabPath": null,
+      "isLockedToParent": true
+    },
+    {
+      "id": "5a889214-cfaa-4e1d-ab17-d0c12cbc6032",
+      "name": "Beta_Surface",
+      "isActive": true,
+      "isStatic": false,
+      "layer": 0,
+      "tag": "Untagged",
+      "children": [ ],
+      "components": [
+        {
+          "__type": "Transform",
+          "id": "298e184b-b4eb-4766-9d5c-dac3f3ef509c",
+          "isEnabled": true,
+          "localPosition": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "localRotation": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "localScale": {
+            "x": 1,
+            "y": 1,
+            "z": 1
+          }
+        },
+        {
+          "__type": "MeshRenderer",
+          "id": "8932a56a-4349-4e3f-950c-ad24a90e4d4f",
+          "isEnabled": true,
+          "meshPath": "Assets\/Models\/Character\/tp_character.glb#submesh1",
+          "materialPath": null,
+          "castShadows": false,
+          "receiveShadows": false,
+          "renderLayer": 1,
+          "colorR": 0.7,
+          "colorG": 0.7,
+          "colorB": 0.7,
+          "colorA": 1,
+          "metallic": 0,
+          "roughness": 0.5,
+          "normalStrength": 1,
+          "texturePath": null,
+          "shaderPath": null
+        }
+      ],
+      "isFolder": false,
+      "prefabPath": null,
+      "isLockedToParent": true
+    }
+  ],
+  "components": [
+    {
+      "__type": "Transform",
+      "id": "b3bddf07-7606-468a-88b9-e2b2ff8f87b7",
+      "isEnabled": true,
+      "localPosition": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      },
+      "localRotation": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      },
+      "localScale": {
+        "x": 0.01,
+        "y": 0.01,
+        "z": 0.01
+      }
+    },
+    {
+      "__type": "Animator",
+      "id": "d5712ef0-9a8c-47d3-bac5-bcc86a8fd499",
+      "isEnabled": true,
+      "clips": [
+        {
+          "name": "Idle",
+          "path": "Assets\/Models\/Character\/animations\/Idle.vanim"
+        },
+        {
+          "name": "rifle_hold",
+          "path": "Assets\/Models\/Character\/animations\/rifle_hold.vanim"
+        }
+      ],
+      "defaultClip": "rifle_hold",
+      "playOnStart": true,
+      "speed": 1
+    },
+    {
+      "__type": "Script",
+      "id": "a137968b-e3d0-495b-8d28-e0d8d0a66d01",
+      "isEnabled": true,
+      "scriptPath": "Assets/Scripts/Player/CharacterViewmodel.cs",
+      "scriptClassName": "CharacterViewmodel"
+    }
+  ],
+  "isFolder": false,
+  "prefabPath": null,
+  "isLockedToParent": false
+}

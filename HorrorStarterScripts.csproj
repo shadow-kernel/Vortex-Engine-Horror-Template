@@ -1,0 +1,30 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net48</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <Nullable>disable</Nullable>
+    <AssemblyName>HorrorStarterScripts</AssemblyName>
+    <RootNamespace>Game</RootNamespace>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- All gameplay scripts. (The old VS-only API stub VortexScripting.cs is gone — excluded here in case an
+         old copy lingers — because we reference the REAL engine assembly below instead.) -->
+    <Compile Include="Assets\Scripts\**\*.cs" />
+    <Compile Remove="Assets\Scripts\VortexScripting.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- The real Vortex scripting API: the SAME assembly the editor compiles your scripts against at runtime, so
+         every type/method (Physics, Audio, Vector3, VortexBehaviour, …) resolves in VS exactly as it will run.
+         The editor (re)writes this path for this machine each time it opens the scripts, so it can't go stale. -->
+    <Reference Include="VortexEngine">
+      <HintPath>C:\Users\Administrator\Documents\GitHub\Vortex-Engine\x64\Release\Vortex Engine.exe</HintPath>
+      <Private>false</Private>
+    </Reference>
+  </ItemGroup>
+
+</Project>
