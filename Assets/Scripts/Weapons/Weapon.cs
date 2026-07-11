@@ -27,8 +27,8 @@ public abstract class Weapon : VortexBehaviour
     // ---- grip: how the weapon sits on the hand bone (offset in metres, rotation in engine ZXY
     // degrees, in the NORMALIZED hand-bone frame). Computed for the tp_character rifle pose; tune
     // per weapon prefab (or visually via the Socket Editor) if a model's origin differs. ----
-    public Vector3 GripOffset = new Vector3(0f, 0.10f, 0f);
-    public Vector3 GripRotation = new Vector3(-81.2f, 23.4f, -126.9f);
+    public Vector3 GripOffset = new Vector3(0f, -0.02f, 0f);
+    public Vector3 GripRotation = new Vector3(81.2f, -156.6f, 126.9f);
 
     // ---- runtime wiring (written by WeaponLoadout — leave alone in the Inspector) ----
     public bool IsFpInstance = false;

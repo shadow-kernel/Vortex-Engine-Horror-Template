@@ -17,7 +17,7 @@ public abstract class Firearm : Weapon
     public float MagOutAt = 0.18f;            // reload progress when the hand grabs the mag (0..1)
     public float MagInAt  = 0.70f;            // progress when the new mag is seated back in the gun
     public Vector3 MagHandOffset = new Vector3(0f, 0.06f, 0f);       // mag-in-left-hand placement (m, bone frame)
-    public Vector3 MagHandRotation = new Vector3(-81.4f, 14f, -120.8f);
+    public Vector3 MagHandRotation = new Vector3(81.2f, -156.6f, 126.9f);
 
     // set by WeaponLoadout: the rig THIS instance hangs on (FP arms or 3P body)
     public long RigEntityId = 0;

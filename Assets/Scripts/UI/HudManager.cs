@@ -18,6 +18,17 @@ public class HudManager : VortexBehaviour
         DrawVitals(W, H);
         DrawAmmo(W, H);
         DrawMiniMap(W, H);
+        DrawReticle(W, H);
+    }
+
+    // ADS reticle: the hitscan leaves the EXACT screen centre, so this dot IS the point of impact —
+    // it reads as the holo's projected dot when the sight is centred (accurate by construction).
+    private void DrawReticle(float W, float H)
+    {
+        if (!PlayerRig.Ads) return;
+        float cx = W * 0.5f, cy = H * 0.5f;
+        UI.Rect(cx - 2.5f, cy - 2.5f, 5f, 5f, Color.Rgba(255, 60, 40, 235), 2.5f);   // red holo dot
+        UI.Rect(cx - 1f, cy - 1f, 2f, 2f, Color.Rgba(255, 200, 190, 255), 1f);       // hot core
     }
 
     // Ammo panel bottom-right: big mag count + magazine size, red pulse when empty, amber when low.

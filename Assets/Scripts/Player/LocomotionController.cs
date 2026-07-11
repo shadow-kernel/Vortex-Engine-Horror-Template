@@ -30,19 +30,21 @@ public class LocomotionController : VortexBehaviour
     // ---- FP: camera-locked placement (metres, camera-local). Tuned live via VM_FP_* env during dev. ----
     public float FpEyeHeight = 1.58f;    // camera sits at the rig's (hidden) head — arms/weapon read naturally
     public float FpOffFwd    = 0.0f;     // forward from the eye
-    public float FpOffRight  = 0.13f;    // right — camera sits LEFT of the gun line, so the weapon fills the
+    public float FpOffRight  = -0.10f;    // right — camera sits LEFT of the gun line, so the weapon fills the
                                          // lower-right and its barrel runs toward the screen centre (CoD look)
-    public float FpOffUp     = 0.03f;    // extra vertical trim (gun into the lower third)
-    public float FpYawOffset = -16f;     // hip yaw twist (deg): stock bottom-right, muzzle up-left toward the
+    public float FpOffUp     = 0.10f;    // extra vertical trim (gun into the lower third)
+    public float FpYawOffset = 14f;     // hip yaw twist (deg): stock bottom-right, muzzle up-LEFT toward the
                                          // centre — the classic CoD diagonal. Blends to 0 during ADS so the
                                          // sight lines up straight when aiming.
     public float FpPitchSign = 1f;       // flip if the arms pitch the wrong way
 
     // ---- FP ADS: shift the WHOLE rig so the weapon's sight line meets the camera centre (CoD-style).
     // Blended in/out smoothly; tune with VM_FP_ADS* env captures. ----
-    public float AdsShiftRight = -0.24f;
-    public float AdsShiftUp    = 0.09f;
+    public float AdsShiftRight = 0.15f;
+    public float AdsShiftUp    = 0.04f;
     public float AdsShiftFwd   = 0.0f;
+    public float AdsYawOffset  = -12f;   // counter-twist while aiming: cancels the aim-pose's slight cross-hold so
+                                        // the barrel lines up STRAIGHT with the view (look through the holo)
     public float AdsBlendSpeed = 10f;
     private float _adsBlend;
     // bones collapsed to nothing in FP so ONLY the arms + weapon render (the hips/spine stay, positioned behind the eye)
@@ -76,6 +78,7 @@ public class LocomotionController : VortexBehaviour
             AdsShiftRight = EnvF("VM_FP_ADSR", AdsShiftRight);
             AdsShiftUp    = EnvF("VM_FP_ADSU", AdsShiftUp);
             AdsShiftFwd   = EnvF("VM_FP_ADSF", AdsShiftFwd);
+            AdsYawOffset  = EnvF("VM_FP_ADSYAW", AdsYawOffset);
             FpYawOffset   = EnvF("VM_FP_YAWOFF", FpYawOffset);
         }
         if (FirstPerson) { PlayAnimation(A + "aim.vanim", 0f); _base = "aim"; }
@@ -183,7 +186,7 @@ public class LocomotionController : VortexBehaviour
                 e.Y - u.Y * FpEyeHeight + f.Y * offF + r.Y * offR + u.Y * offU,
                 e.Z - u.Z * FpEyeHeight + f.Z * offF + r.Z * offR + u.Z * offU);
             // hip twist: stock bottom-right, muzzle toward the centre; straightens out while aiming
-            float yawTwist = FpYawOffset * (1f - _adsBlend);
+            float yawTwist = FpYawOffset * (1f - _adsBlend) + AdsYawOffset * _adsBlend;
             SetWorldPose(pos, new Vector3(PlayerRig.Pitch * FpPitchSign, PlayerRig.Yaw + yawTwist, 0f));
             return;
         }
