@@ -89,6 +89,20 @@ rüberkopieren) ziehen kannst:
    Soll der Charakter der SPIELER sein: im `Player`-Prefab die Kinder `WCharakter` und `FP_Arms` durch das neue Prefab
    ersetzen (FP_Arms bekommt `FirstPerson`=an, MeshRenderer-Layer 1, Material `fp_arms.vmat`).
 
+### Welche Animations-Komponente wofür?
+
+| Komponente | Was sie tut | Wann du sie brauchst |
+|---|---|---|
+| **Animator** | Spielt die Animations-Clips (`.vanim`) des Skeletts ab: Clip-Liste, Default-Clip, Geschwindigkeit, Layer/Überblendungen per Script (`PlayAnimation`, `PlayAnimationLayered`). Ohne Animator bewegt sich ein Skinned Mesh nicht. | **Immer** auf jedem animierten Charakter (auf dem Entity über den `Meshes`-Kindern). Die drei anderen Komponenten arbeiten nur zusammen mit einem Animator. |
+| **Bone Attachment** | Klebt DIESES Entity an einen Knochen eines anderen Entities (z.B. Laterne an die linke Hand, Helm an den Kopf) — mit Offset/Rotation, folgt jeder Animation exakt. Im Socket-Editor visuell platzierbar. | Auf dem Objekt, das angehängt werden soll (nicht auf dem Charakter). Waffen hängt der `WeaponLoadout` per Script an (`Animation.Attach`) — dasselbe System. |
+| **Two-Bone IK** | Verbiegt eine 3-Gelenk-Kette (Oberarm → Unterarm → Hand, oder Oberschenkel → Knie → Fuß), damit die Hand/der Fuß ein Ziel erreicht — z.B. die linke Hand bleibt am Handschutz, egal was die Animation macht. | Auf dem Charakter (neben dem Animator), eine Komponente pro Kette: Stützhand an der Waffe, beide Hände im First-Person-Rig, später Füße auf Treppen. |
+| **Hand Pose** | Schließt/öffnet die **Finger** einer Hand (Beugung pro Fingergelenk) additiv über jede Animation — der eigentliche „Griff“. | Auf dem Charakter (neben dem Animator), eine pro Hand, wenn die Finger um einen Griff/Handschutz/Gegenstand liegen sollen. |
+
+Kurz: **Animator** bewegt den Körper, **Two-Bone IK** bringt die Hand an die richtige Stelle, **Hand Pose** schließt
+die Finger dort, **Bone Attachment** hängt Dinge an Knochen. Für einen bewaffneten Charakter nimmst du alle vier:
+Animator + Two-Bone IK (Stützhand) + 2× Hand Pose auf dem Charakter, die Waffe hängt per Bone Attachment/`Attach` an
+der rechten Hand.
+
 ### HandPose — Finger im Inspector statt Code
 `Inspector ▸ Add Component ▸ Animation ▸ Hand Pose` auf dem Entity mit dem **Animator**. Felder:
 * **Hand** (Left/Right) — wählt die Knochen (`mixamorig:LeftHandIndex1` …).

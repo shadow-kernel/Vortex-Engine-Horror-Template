@@ -58,6 +58,8 @@ public static class PlayerRig
 
     // ---- procedural first-person viewmodel bridge (v2.8, see ViewmodelRig.cs) ----
     public static float  Roll;                     // camera roll (deg) — strafe lean / slide; the gun rolls with the view
+    public static float  BobPhase;                 // stride phase (rad, 2π = two steps) — camera AND viewmodel bob share it
+    public static float  BobWeight;                // 0 standing .. 1 moving (eases in/out, so the bob never pops)
     public static Weapon ActiveWeapon;             // the equipped FP weapon's behaviour (poses, grip points); null = unarmed
     public static long   FpWeaponEntity;           // its entity (RenderLayer 1 copy)
     public static float  ReloadProgress = -1f;     // 0..1 while the active firearm reloads, -1 otherwise
@@ -89,11 +91,12 @@ public static class PlayerRig
 //
 // Feel notes vs. the horror-starter Quake controller: higher ground accel + friction = snappy,
 // grounded, "instant" CoD response (not floaty). Sprint punches the FOV out; ADS pulls it in.
-// Landing dips the view; walking bobs it (CameraFX composes the view AND the weapon together, so
-// the gun bobs/kicks with you). World FOV is owned HERE; the weapon owns the viewmodel FOV.
+// Landing dips the view; walking bobs it with ONE deterministic stride phase (PlayerRig.BobPhase) that the camera
+// and the weapon viewmodel share, so the gun rides every camera motion instead of shaking against it. World FOV is
+// owned HERE; the weapon owns the viewmodel FOV.
 //
-// Lives on the PLAYER entity. The camera is a child at local (0,0,0); the weapon viewmodel is a
-// child of the camera, so it inherits look + rides every CameraFX impulse.
+// Lives on the PLAYER entity (the camera). The feet are the authoritative position; the camera is derived from
+// them every frame (eye height, lean, bob, landing dip).
 public class CoDMovement : VortexBehaviour
 {
     // ---- speeds (m/s) ----
@@ -143,6 +146,18 @@ public class CoDMovement : VortexBehaviour
     public float SlideTime  = 0.65f;
     public float SlideDrop  = 0.95f;   // eye drop during slide
 
+    // ---- stride bob (deterministic, driven by the distance walked: one dip per step, one sway per stride) ----
+    public float StepLength       = 1.9f;    // metres per step while walking (bob frequency = speed / step length)
+    public float StepLengthSprint = 2.25f;   // longer strides while sprinting
+    public float BobVertical      = 0.010f;  // m, dip per step (walk)
+    public float BobVerticalSprint= 0.020f;
+    public float BobLateral       = 0.007f;  // m, sideways sway per stride (walk)
+    public float BobLateralSprint = 0.014f;
+    public float BobRoll          = 0.35f;   // deg (walk)
+    public float BobRollSprint    = 0.80f;
+    public float BobPitch         = 0.25f;   // deg nod per step (walk)
+    public float BobPitchSprint   = 0.50f;
+
     // capsule
     public float CapsuleRadius = 0.35f;
     public float CapsuleHeight = 1.85f;
@@ -180,6 +195,8 @@ public class CoDMovement : VortexBehaviour
     private float _sprintOutT; private bool _wasSprinting;
     private float _stepSmooth;         // camera offset that eases out abrupt grounded height changes (curbs, stairs)
     private bool  _adsKeyHeld, _adsLatched;
+    private float _stridePhase, _bobW;                       // stride bob state
+    private float _dipY, _dipYV, _dipP, _dipPV;              // landing / mantle dip spring (m, deg) — moves camera AND gun
     public  float StepSmoothing = 14f; // 1/s
     private bool  _moveLog = System.Environment.GetEnvironmentVariable("VM_MOVELOG") == "1";
     private float _logT;
@@ -483,17 +500,12 @@ public class CoDMovement : VortexBehaviour
                 if (!_prevGrounded)
                 {
                     float impact = -_vy;
-                    if (impact > 3f) CameraFX.Kick(new Vector3(-System.Math.Min(3.5f, impact * 0.35f), 0f, 0f),
-                                                   new Vector3(0f, -System.Math.Min(0.05f, impact * 0.006f), 0f));
+                    if (impact > 3f) { _dipYV -= System.Math.Min(0.9f, impact * 0.09f); _dipPV += System.Math.Min(45f, impact * 4.5f); }
                 }
                 _vy = 0f;
             }
         }
         _prevGrounded = _grounded;
-
-        // ---------------- camera from the feet: eye height + step smoothing + R6 lean (sideways peek along Right) ----------------
-        _stepSmooth -= _stepSmooth * System.Math.Min(1f, StepSmoothing * dt);
-        Position = new Vector3(_feet.X + rX * _leanCur * LeanOffset, _feet.Y + _eyeCur + _stepSmooth, _feet.Z + rZ * _leanCur * LeanOffset);
 
         // ---------------- camera roll (strafe lean + slide + Q/E lean) ----------------
         // engine roll: positive tilts the head to the LEFT (Z rotation in the row-vector ZXY convention) — lean
@@ -507,22 +519,39 @@ public class CoDMovement : VortexBehaviour
         _camRecVel += (-CamRecoilStiff * _camRecPitch - CamRecoilDamp * _camRecVel) * dt; _camRecPitch += _camRecVel * dt;
         _camRecYawVel += (-CamRecoilStiff * _camRecYaw - CamRecoilDamp * _camRecYawVel) * dt; _camRecYaw += _camRecYawVel * dt;
 
-        Rotation = new Vector3(_pitch + _camRecPitch, _yaw + _camRecYaw, _rollCur);
-        PlayerRig.Roll = _rollCur;
-
-        // ---------------- view bob (speed-scaled, subtle) ----------------
+        // ---------------- stride bob: one phase for camera AND weapon ----------------
+        // The phase advances with the distance actually walked (one dip per step, one sideways sway per stride), so
+        // the frequency follows the speed like real steps (~1.8 Hz walking, ~2.6 Hz sprinting). The old view bob was
+        // RANDOM noise (CameraFX.Sway) that shook the camera without the gun — that read as twitching while sprinting.
         float hSpeed = (float)System.Math.Sqrt(_vx * _vx + _vz * _vz);
         _speedSmooth += (hSpeed - _speedSmooth) * System.Math.Min(1f, 10f * dt);
-        float moveN = System.Math.Min(1f, _speedSmooth / SprintSpeed);
-        if (_grounded && !ads && !_mantling)
-        {
-            float amp  = 0.004f + 0.011f * moveN;
-            float rot  = 0.06f  + 0.30f  * moveN;
-            float freq = 1.4f   + 3.0f   * moveN;
-            CameraFX.Sway(0, amp, rot, freq);
-        }
-        else if (ads)   CameraFX.Sway(0, 0.0016f, 0.06f, 0.7f);   // steadied breathing
-        else            CameraFX.Sway(0, 0.004f, 0.12f, 0.5f);    // airborne / climbing
+        float sprintK = Clamp01((_speedSmooth - WalkSpeed) / System.Math.Max(0.1f, SprintSpeed - WalkSpeed));
+        bool bobOn = _grounded && !_mantling && !_sliding;
+        float stepLen = StepLength + (StepLengthSprint - StepLength) * sprintK;
+        if (bobOn) _stridePhase += hSpeed * dt / (2f * System.Math.Max(0.3f, stepLen)) * 6.2831853f;
+        if (_stridePhase > 62.831853f) _stridePhase -= 62.831853f;
+        float bobTarget = bobOn ? System.Math.Min(1f, _speedSmooth / System.Math.Max(0.1f, WalkSpeed)) : 0f;
+        _bobW += (bobTarget - _bobW) * System.Math.Min(1f, 6f * dt);
+        float adsK = ads ? 0.2f : 1f, crouchK = crouch ? 0.7f : 1f;
+        float s1 = (float)System.Math.Sin(_stridePhase), dip = (1f - (float)System.Math.Cos(2f * _stridePhase)) * 0.5f;   // dip: 0..1, once per step
+        float bobY     = -(BobVertical + (BobVerticalSprint - BobVertical) * sprintK) * dip * _bobW * adsK * crouchK;
+        float bobX     =  (BobLateral  + (BobLateralSprint  - BobLateral)  * sprintK) * s1  * _bobW * adsK * crouchK;
+        float bobRoll  =  (BobRoll     + (BobRollSprint     - BobRoll)     * sprintK) * s1  * _bobW * adsK;
+        float bobPitch =  (BobPitch    + (BobPitchSprint    - BobPitch)    * sprintK) * dip * _bobW * adsK;
+        PlayerRig.BobPhase = _stridePhase; PlayerRig.BobWeight = _bobW * adsK;
+
+        // landing / mantle dip: a damped spring on the view height and pitch (shared by the gun, unlike a CameraFX kick)
+        _dipYV += (-140f * _dipY - 16f * _dipYV) * dt; _dipY += _dipYV * dt;
+        _dipPV += (-140f * _dipP - 16f * _dipPV) * dt; _dipP += _dipPV * dt;
+        CameraFX.StopSway(0);   // no random camera noise: every camera motion above is shared with the viewmodel
+
+        // ---------------- camera = feet + eye height + step smoothing + R6 lean + bob + dip ----------------
+        _stepSmooth -= _stepSmooth * System.Math.Min(1f, StepSmoothing * dt);
+        float side = _leanCur * LeanOffset + bobX;
+        Position = new Vector3(_feet.X + rX * side, _feet.Y + _eyeCur + _stepSmooth + bobY + _dipY, _feet.Z + rZ * side);
+        float viewPitch = _pitch + _camRecPitch + bobPitch + _dipP;
+        Rotation = new Vector3(viewPitch, _yaw + _camRecYaw, _rollCur + bobRoll);
+        PlayerRig.Roll = _rollCur + bobRoll;
 
         // remember stance for FOV
         _wantSprintFov = sprint; _wantTacFov = tac; _wantAdsFov = ads;
@@ -530,7 +559,7 @@ public class CoDMovement : VortexBehaviour
         // publish rig state for the world-space weapon viewmodel
         PlayerRig.EyePos = Position;
         // publish the RECOILED view so the gun (and its sight) ride the camera kick — sight stays on the reticle
-        PlayerRig.Yaw = _yaw + _camRecYaw; PlayerRig.Pitch = _pitch + _camRecPitch;
+        PlayerRig.Yaw = _yaw + _camRecYaw; PlayerRig.Pitch = viewPitch;
         PlayerRig.Ads = ads; PlayerRig.Speed = _speedSmooth;
         PlayerRig.Grounded = _grounded; PlayerRig.Ready = true;
 
@@ -576,7 +605,7 @@ public class CoDMovement : VortexBehaviour
         _mantling = true; _mantleT = 0f; _mantleFrom = _feet; _mantleTo = new Vector3(ledge.X, ledge.Y + 0.02f, ledge.Z);
         _vx = 0f; _vz = 0f; _vy = 0f; _sliding = false; _tacSprint = false;
         PlayerRig.Mantling = true;
-        CameraFX.Kick(new Vector3(2.5f, 0f, 0f), new Vector3(0f, -0.03f, 0f));
+        _dipPV += 28f; _dipYV -= 0.3f;   // the climb pulls the view (and the gun) down a touch
     }
 
     private static float Clamp01(float v) { return v < 0f ? 0f : (v > 1f ? 1f : v); }

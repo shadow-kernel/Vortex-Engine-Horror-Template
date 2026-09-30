@@ -35,13 +35,14 @@ or grow into your own game.
 | **Ctrl / C** | crouch — hold it while sprinting to **slide** |
 | **Space** | jump (view dips on landing; jumping into chest-high cover auto-mantles onto it) |
 | **LMB** | fire (full-auto) · **V** cycles AUTO / SEMI / BURST |
-| **RMB** / **Left Alt** | aim down sights (ADS — narrows spread, tames recoil, zooms; mouse sensitivity scales with the FOV like CoD). Trackpad? Use Left Alt, or switch **ESC ▸ Aim: Toggle** (press once to aim, again to lower) |
+| **RMB** / **Left Alt** | aim down sights (ADS — narrows spread, tames recoil, zooms; mouse sensitivity scales with the FOV like CoD). Default is **toggle**: click once to aim, again to lower — works on a Magic Mouse / trackpad where you can't hold both buttons; **ESC ▸ Aim: Toggle** switches to hold-to-aim |
 | **1 / 2** · wheel | switch weapon (Vityaz · MP5) — holster / draw timeline |
 | **Q / E** | lean left / right (R6-style toggle: the camera shifts and rolls, the feet stay put) |
 | **R** | reload |
 | **F** | weapon flashlight on/off (battery drains) |
 | **E** | interact — open a sliding bunker door |
-| **ESC** | pause (Q quits) |
+| **ESC** | settings menu (sensitivity, FOV, aim toggle, audio, video) |
+| **P** (play in the editor / dev builds) | **free camera**: fly around and watch your character in third person (WASD, Q/E down/up, Shift faster, mouse look). **Caps Lock** hands the controls back to the player while the camera stays put — walk, sprint, aim and shoot and watch yourself. **P** again returns to first person. Not available in exported release builds. |
 
 Gamepad works out of the box (left stick move, right stick look, RT fire, LT aim, X reload).
 

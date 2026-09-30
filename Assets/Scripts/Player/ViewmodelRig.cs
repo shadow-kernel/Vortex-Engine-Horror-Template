@@ -20,8 +20,8 @@ public class ViewmodelRig
     public float SwayAmount   = 0.055f;  // degrees of weapon lag per pixel of mouse movement
     public float SwayMax      = 3.2f;
     public float SwaySpeed    = 11f;
-    public float BobAmount    = 0.0075f; // metres at sprint speed
-    public float BobFrequency = 1.75f;   // stride cycles per metre of travel (x2 for the vertical bounce)
+    public float BobAmount    = 0.006f;  // metres the gun swings relative to the camera (the camera bob itself is CoDMovement's)
+    public float BobRollDeg   = 0.9f;    // roll swing per stride (deg)
     public float RecoilStiffness = 200f, RecoilDamping = 17f;   // spring that pulls the gun back after a kick
 
     // ---- arm geometry (CoD-style): the hidden SHOULDERS are pinned to a fixed camera-space anchor below and a touch
@@ -46,12 +46,13 @@ public class ViewmodelRig
 
     private long _rig;
     private bool _bonesHidden, _envApplied;
-    private float _adsT, _sprintT, _reloadT, _bobBlend, _bobPhase, _time;
+    private float _adsT, _sprintT, _reloadT, _time;
     private float _swayYaw, _swayPitch;
     private float _kBack, _kBackV, _kPitch, _kPitchV, _kYaw, _kYawV, _kRoll, _kRollV;
     private long _magEnt; private long _magWeapon; private Vector3 _magRest, _magRestRot;
     private bool _slapDone;
     private bool _debug = System.Environment.GetEnvironmentVariable("VM_DEBUG") == "1";
+    private bool _jitterLog = System.Environment.GetEnvironmentVariable("VM_JITTERLOG") == "1";   // per-frame viewmodel log (jitter analysis)
     private Vector3 _lf, _ln;   // support hand: finger direction + palm normal in HAND-BONE space (measured from the pose)
     private int _dbgFrame;
 
@@ -122,15 +123,15 @@ public class ViewmodelRig
         float sx = _swayYaw * 0.0022f, sy = -_swayPitch * 0.0022f;
 
         // ---------------- walk bob + breathing ----------------
-        float speed = PlayerRig.Speed;
-        float moveN = speed / 6.3f; if (moveN > 1f) moveN = 1f;
-        _bobBlend = Approach(_bobBlend, PlayerRig.Grounded ? moveN : 0f, 6f * dt);
-        _bobPhase += speed * BobFrequency * dt * 3.14159f;
-        float amp = BobAmount * _bobBlend * (1f - 0.7f * a) * (1f + 0.6f * sp);
-        float bx = (float)System.Math.Sin(_bobPhase) * amp;
-        float by = (float)System.Math.Sin(_bobPhase * 2f) * amp * 0.55f - amp * 0.25f;
-        float bRoll  = (float)System.Math.Sin(_bobPhase) * 1.1f * _bobBlend * (1f - a);
-        float bPitch = (float)System.Math.Sin(_bobPhase * 2f) * 0.5f * _bobBlend * (1f - a);
+        // Same stride phase as the camera (CoDMovement): the gun swings sideways once per stride and dips at every
+        // foot strike, in step with the view — never at its own frequency (that read as twitching while sprinting).
+        float ph = PlayerRig.BobPhase, bw = PlayerRig.BobWeight;
+        float stepDip = (1f - (float)System.Math.Cos(2f * ph)) * 0.5f;
+        float amp = BobAmount * bw * (1f - 0.7f * a) * (1f + 0.6f * sp);
+        float bx = (float)System.Math.Sin(ph) * amp;
+        float by = -stepDip * amp * 0.6f;
+        float bRoll  = (float)System.Math.Sin(ph) * BobRollDeg * bw * (1f - a);
+        float bPitch = stepDip * 0.4f * bw * (1f - a);
         float brY = (float)System.Math.Sin(_time * 1.3f) * 0.0012f * (1f - 0.5f * a);
         float brPitch = (float)System.Math.Sin(_time * 1.1f) * 0.15f * (1f - 0.6f * a);
 
@@ -222,6 +223,16 @@ public class ViewmodelRig
         else Animation.SetIkTarget(_rig, SupportBone, supportTarget);
         DriveMag(w, magOff);
 
+        if (_jitterLog)
+        {
+            Quaternion ci = camQ.Inverse;
+            Vector3 gp, ge; Scene.TryGetWorldPose(PlayerRig.FpWeaponEntity, out gp, out ge);
+            Debug.Log("[VJ] t=" + _time.ToString("0.0000", System.Globalization.CultureInfo.InvariantCulture) + " eye=" + e + " weapon=" + ci.Rotate(gp - e) + " want=" + ci.Rotate(wp - e)
+                + " rig=" + ci.Rotate(r1p - e) + " sp=" + sp.ToString("0.00", System.Globalization.CultureInfo.InvariantCulture) + " a=" + a.ToString("0.00", System.Globalization.CultureInfo.InvariantCulture)
+                + " RFore=" + ci.Rotate(Animation.BonePosition(_rig, "mixamorig:RightForeArm") - e) + " LFore=" + ci.Rotate(Animation.BonePosition(_rig, "mixamorig:LeftForeArm") - e)
+                + " RH=" + ci.Rotate(Animation.BonePosition(_rig, HandBone) - e) + " LH=" + ci.Rotate(Animation.BonePosition(_rig, SupportBone) - e)
+                + " gripWant=" + ci.Rotate(tp2 - e) + " supWant=" + ci.Rotate(supportTarget - e) + " speed=" + PlayerRig.Speed.ToString("0.00", System.Globalization.CultureInfo.InvariantCulture));
+        }
         if (_debug && (++_dbgFrame % 90) == 0)
         {
             Quaternion ci = camQ.Inverse;

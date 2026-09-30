@@ -12,7 +12,7 @@ public static class UserSettings
     public static float RenderScale      = 1.0f;
     public static bool  VSync            = false;
     public static bool  Fullscreen       = false;
-    public static bool  AdsToggle        = false;  // false = hold RMB / Left Alt to aim (CoD default), true = press once to aim, again to lower
+    public static bool  AdsToggle        = true;   // true = press RMB once to aim, again to lower (Magic Mouse / trackpad cannot hold right + left); false = hold
     public static int   ResIndex         = 2;   // 1280/1600/1920/2560
     public static int   DlssMode         = 0;   // 0 Off · 1 Quality · 2 Balanced · 3 Performance · 4 Ultra
     public static int   FrameGen         = 0;   // 0 Off · 1 x2 · 2 x3 · 3 x4
