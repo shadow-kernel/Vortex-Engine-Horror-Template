@@ -3,14 +3,17 @@ using Vortex;
 // UNIFIED CHARACTER RIG DRIVER — drives ONE skinned tp_character rig from the shared PlayerRig state.
 // The SAME script runs on BOTH rigs of the player:
 //   * 3P world body   (FirstPerson = false, meshes on RenderLayer 2): stands upright at the feet, yaw-only,
-//     spine bends to the aim. This is what OTHER cameras / players see you doing.
-//   * FP arms viewmodel (FirstPerson = true, meshes on RenderLayer 1): the same rig, camera-locked, with the
-//     head/neck/legs hidden so only the arms + weapon show (CoD-style). Pitches with the view as one unit.
-// Because both read the same PlayerRig and play the SAME clips, the weapon stays gripped by BOTH hands and the
-// reload (hand pulls the mag) is IDENTICAL in first- and third-person — no separate animation content.
+//     spine bends to the aim, plays the full locomotion state machine + masked fire/reload overlays. This is
+//     what OTHER cameras / players see you doing.
+//   * FP arms viewmodel (FirstPerson = true, meshes on RenderLayer 1): the same rig, but driven PROCEDURALLY by
+//     the ViewmodelRig helper (CoD-style): the weapon gets a camera-space pose (hip / ADS / sprint / reload,
+//     sway, bob, recoil), the rig is placed so the animated right hand sits on the grip, the left hand is IK'd
+//     onto the fore-grip / along the magazine path, and torso/legs/head are hidden so only the arms render.
+//     It plays one shouldered hold clip (aim) for the finger/elbow pose; no first-person animation content needed.
 //
-// The weapon is glued to mixamorig:RightHand by a BoneAttachment socket; a TwoBoneIk keeps the LEFT hand on the
-// fore-grip (autoGrip). During reload the support-hand IK is released so the animated hand can reach the mag well.
+// The weapon is glued to mixamorig:RightHand by the WeaponLoadout (bone attach); a TwoBoneIk component on each
+// rig keeps the LEFT hand on the fore-grip (3P: auto-grip from the clip, released during the reload clip;
+// FP: world-space IK target from the ViewmodelRig).
 public class LocomotionController : VortexBehaviour
 {
     const string A = "Assets/Models/Character/animations/";
@@ -20,42 +23,33 @@ public class LocomotionController : VortexBehaviour
 
     // ---- placement ----
     public bool  FollowPlayer = true;    // false = a static showcase NPC (don't drive it)
-    public bool  FirstPerson  = false;   // true = FP arms viewmodel (camera-locked, non-arm bones hidden)
+    public bool  FirstPerson  = false;   // true = FP arms viewmodel (procedural, see ViewmodelRig.cs)
 
     // ---- 3P: upright at the feet, spine bends to aim ----
+    public float  BodyYawOffset = 180f;  // the Mixamo rig's rest pose faces -Z in engine space: turn it to face where you look
     public float  SpineAimGain  = 1f;
     public float  SpineAimSign  = 1f;
     public string[] SpineBones  = new string[] { "mixamorig:Spine", "mixamorig:Spine1", "mixamorig:Spine2" };
 
-    // ---- FP: camera-locked placement (metres, camera-local). Tuned live via VM_FP_* env during dev. ----
-    public float FpEyeHeight = 1.58f;    // camera sits at the rig's (hidden) head — arms/weapon read naturally
-    public float FpOffFwd    = 0.0f;     // forward from the eye
-    public float FpOffRight  = -0.10f;    // right — camera sits LEFT of the gun line, so the weapon fills the
-                                         // lower-right and its barrel runs toward the screen centre (CoD look)
-    public float FpOffUp     = 0.10f;    // extra vertical trim (gun into the lower third)
-    public float FpYawOffset = 14f;     // hip yaw twist (deg): stock bottom-right, muzzle up-LEFT toward the
-                                         // centre — the classic CoD diagonal. Blends to 0 during ADS so the
-                                         // sight lines up straight when aiming.
-    public float FpPitchSign = 1f;       // flip if the arms pitch the wrong way
+    // ---- FP: the hold clip and the bones stripped away so only the arms + weapon render ----
+    public string   FpHoldClip = "aim";
+    public float    FpRigScale = 0.8f;   // extra scale on the FP rig (arm length vs. weapon distance; see ViewmodelRig.ShoulderAnchor)
+    // whole limbs (bone + descendants): neck+head, both legs
+    public string[] HideBones = new string[] { "mixamorig:Neck", "mixamorig:LeftUpLeg", "mixamorig:RightUpLeg" };
+    // single bones (descendants stay): pelvis, spine, shoulders -> the arms hanging off them keep rendering
+    public string[] HideBonesSelf = new string[] { "mixamorig:Hips", "mixamorig:Spine", "mixamorig:Spine1", "mixamorig:Spine2",
+                                                   "mixamorig:LeftShoulder", "mixamorig:RightShoulder" };
 
-    // ---- FP ADS: shift the WHOLE rig so the weapon's sight line meets the camera centre (CoD-style).
-    // Blended in/out smoothly; tune with VM_FP_ADS* env captures. ----
-    public float AdsShiftRight = 0.15f;
-    public float AdsShiftUp    = 0.04f;
-    public float AdsShiftFwd   = 0.0f;
-    public float AdsYawOffset  = -12f;   // counter-twist while aiming: cancels the aim-pose's slight cross-hold so
-                                        // the barrel lines up STRAIGHT with the view (look through the holo)
-    public float AdsBlendSpeed = 10f;
-    private float _adsBlend;
-    // bones collapsed to nothing in FP so ONLY the arms + weapon render (the hips/spine stay, positioned behind the eye)
-    public string[] HideBones = new string[] { "mixamorig:Head", "mixamorig:HeadTop_End", "mixamorig:Neck",
-                                               "mixamorig:LeftUpLeg", "mixamorig:RightUpLeg" };
+    // ---- FP mesh look: hide helper meshes (the Beta rig's joint spheres) and tint the arm surface like gloves/sleeves ----
+    public string[] HideMeshChildren = new string[] { "Beta_Joints" };
+    public bool     TintArms = true;
+    public Vector3  ArmTint = new Vector3(0.13f, 0.12f, 0.11f);
 
-    // ---- reload: release the support-hand IK so the animated hand reaches the mag well ----
+    // ---- reload (3P): release the support-hand IK so the animated hand reaches the mag well ----
     public string IkTipBone = "mixamorig:LeftHand";
     public float  ReloadTime = 2.4f;
 
-    private bool   _demo, _fpHidden;
+    private bool   _demo;
     private string _base = "";
     private string _wantPending = "";
     private float  _wantTimer;
@@ -63,30 +57,38 @@ public class LocomotionController : VortexBehaviour
     private float  _transT;
     private bool   _firing, _reloading, _reloadPrev, _dead;
     private float  _fireT, _reloadT, _demoT;
+    private ViewmodelRig _vm;
+    private bool   _fpBonesHidden;
 
     public override void Start()
     {
         _demo = System.Environment.GetEnvironmentVariable("VM_ANIMDEMO") == "1";
         if (FirstPerson)
         {
-            // live dev tuning of the FP viewmodel placement
-            FpEyeHeight = EnvF("VM_FP_EYEH", FpEyeHeight);
-            FpOffFwd    = EnvF("VM_FP_FWD",  FpOffFwd);
-            FpOffRight  = EnvF("VM_FP_RIGHT",FpOffRight);
-            FpOffUp     = EnvF("VM_FP_UP",   FpOffUp);
-            FpPitchSign = EnvF("VM_FP_PSIGN",FpPitchSign);
-            AdsShiftRight = EnvF("VM_FP_ADSR", AdsShiftRight);
-            AdsShiftUp    = EnvF("VM_FP_ADSU", AdsShiftUp);
-            AdsShiftFwd   = EnvF("VM_FP_ADSF", AdsShiftFwd);
-            AdsYawOffset  = EnvF("VM_FP_ADSYAW", AdsYawOffset);
-            FpYawOffset   = EnvF("VM_FP_YAWOFF", FpYawOffset);
+            string envClip = System.Environment.GetEnvironmentVariable("VM_CLIP");      // dev tuning hooks
+            if (envClip != null && envClip != "") FpHoldClip = envClip;
+            string envScale = System.Environment.GetEnvironmentVariable("VM_SCALE");
+            float sc;
+            if (envScale != null && float.TryParse(envScale, System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out sc) && sc > 0.01f) FpRigScale = sc;
+            if (FpRigScale > 0.01f && System.Math.Abs(FpRigScale - 1f) > 0.001f) Scale = new Vector3(Scale.X * FpRigScale, Scale.Y * FpRigScale, Scale.Z * FpRigScale);
+            string envHide = System.Environment.GetEnvironmentVariable("VM_HIDESELF");
+            if (envHide != null && envHide != "") HideBonesSelf = envHide.Split(',');
+            string envJoints = System.Environment.GetEnvironmentVariable("VM_HIDEJOINTS");
+            if (envJoints == "1") HideMeshChildren = new string[] { "Beta_Joints" };
+            string envColor = System.Environment.GetEnvironmentVariable("VM_ARMCOLOR");
+            if (envColor != null && envColor != "") { string[] c = envColor.Split(','); float cr, cg, cb; if (c.Length >= 3 && float.TryParse(c[0], System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out cr) && float.TryParse(c[1], System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out cg) && float.TryParse(c[2], System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out cb)) { ArmTint = new Vector3(cr, cg, cb); TintArms = true; } }
+            ApplyFpMeshLook();
+            _vm = new ViewmodelRig();
+            _vm.Start(EntityId);
+            PlayAnimation(A + FpHoldClip + ".vanim", 0f); _base = FpHoldClip;
         }
-        if (FirstPerson) { PlayAnimation(A + "aim.vanim", 0f); _base = "aim"; }
         else { PlayAnimation(A + "rifle_idle.vanim", 0f); _base = "rifle_idle"; }
     }
 
     public override void Update(float dt)
     {
+        if (FirstPerson) return;   // the FP arms are posed procedurally in LateUpdate (no state machine)
+
         float speed = 0f, fwd = 0f, right = 0f; bool ads = false, airborne = false, fireBtn = false, reloadBtn = false, dead = false;
         if (_demo) DemoInputs(dt, ref speed, ref fwd, ref right, ref ads, ref airborne, ref fireBtn, ref reloadBtn);
         else
@@ -117,15 +119,7 @@ public class LocomotionController : VortexBehaviour
         bool wasRun = _base == "run" || _base == "run_back";
         float runCut = wasRun ? RunSpeed - 0.6f : RunSpeed + 0.6f;
         string want;
-        if (FirstPerson)
-        {
-            // FP viewmodel: the weapon must ALWAYS be shouldered and IN FRAME (CoD-style) — the 3P
-            // low-ready/locomotion poses hang the arms below the camera. aim = shouldered idle;
-            // rifle_run adds the movement sway while staying shouldered.
-            if (speed < 0.25f || ads)  want = "aim";
-            else                        want = "rifle_run";
-        }
-        else if (airborne)                                  want = fwd < -0.3f ? "jump_back" : "jump";
+        if (airborne)                                       want = fwd < -0.3f ? "jump_back" : "jump";
         else if (speed < 0.25f)                             want = ads ? "aim" : "rifle_idle";
         else if (System.Math.Abs(right) > System.Math.Abs(fwd) + 0.35f) want = right > 0f ? "strafe_r" : "strafe_l";
         else if (fwd < -0.3f)                               want = speed > runCut ? "run_back" : "walk_back";
@@ -143,61 +137,46 @@ public class LocomotionController : VortexBehaviour
         Overlays(fireBtn, reloadBtn, dt);
     }
 
-    // Placed AFTER Update so the camera pitch is final. FP: lock to the camera and pitch as one unit, hiding the
-    // non-arm bones. 3P: stand upright at the feet (yaw only) and bend the spine to the aim.
+    // Placed AFTER Update so the camera pitch is final. FP: hand the rig to the procedural viewmodel.
+    // 3P: stand upright at the feet (yaw only) and bend the spine to the aim.
     public override void LateUpdate(float dt)
     {
         if (_demo || !FollowPlayer || !PlayerRig.Ready) return;
 
-        if (PlayerRig.Inspect)
-        {
-            if (FirstPerson) SetWorldPose(new Vector3(0f, -1000f, 0f), Vector3.Zero);  // hide the FP arms during orbit-inspect
-            return;                                                                     // 3P body: leave where it is
-        }
-
         if (FirstPerson)
         {
-            // hide head/neck/legs ONCE so only the arms + weapon render
-            if (!_fpHidden)
-            {
-                int hn = HideBones != null ? HideBones.Length : 0;
-                for (int i = 0; i < hn; i++) if (HideBones[i] != null && HideBones[i] != "") SetBoneScaleOverride(HideBones[i], 0f);
-                _fpHidden = true;
-            }
-
-            float yawR = PlayerRig.Yaw * 0.0174532925f;
-            float pitR = PlayerRig.Pitch * 0.0174532925f;
-            float cy = (float)System.Math.Cos(yawR), sy = (float)System.Math.Sin(yawR);
-            float cp = (float)System.Math.Cos(pitR), sp = (float)System.Math.Sin(pitR);
-            Vector3 f = new Vector3(sy * cp, -sp, cy * cp);
-            Vector3 r = new Vector3(cy, 0f, -sy);
-            Vector3 u = PlayerRig.ViewUp(f, r);
-            Vector3 e = PlayerRig.EyePos;
-
-            // ADS: shift the whole rig so the sight line meets the camera centre (smoothly blended)
-            float adsT = PlayerRig.Ads ? 1f : 0f;
-            _adsBlend += (adsT - _adsBlend) * System.Math.Min(1f, AdsBlendSpeed * dt);
-            float offR = FpOffRight + AdsShiftRight * _adsBlend;
-            float offU = FpOffUp + AdsShiftUp * _adsBlend;
-            float offF = FpOffFwd + AdsShiftFwd * _adsBlend;
-
-            Vector3 pos = new Vector3(
-                e.X - u.X * FpEyeHeight + f.X * offF + r.X * offR + u.X * offU,
-                e.Y - u.Y * FpEyeHeight + f.Y * offF + r.Y * offR + u.Y * offU,
-                e.Z - u.Z * FpEyeHeight + f.Z * offF + r.Z * offR + u.Z * offU);
-            // hip twist: stock bottom-right, muzzle toward the centre; straightens out while aiming
-            float yawTwist = FpYawOffset * (1f - _adsBlend) + AdsYawOffset * _adsBlend;
-            SetWorldPose(pos, new Vector3(PlayerRig.Pitch * FpPitchSign, PlayerRig.Yaw + yawTwist, 0f));
+            if (!_fpBonesHidden) { _fpBonesHidden = true; _vm.HideBodyBones(HideBones, HideBonesSelf); }
+            if (PlayerRig.Inspect) { _vm.Park(); return; }
+            _vm.LateUpdate(dt);
             return;
         }
 
+        if (PlayerRig.Inspect) return;   // 3P body: leave where it is
+
         // ---- 3P: upright at the feet, yaw only; spine bends to the aim ----
-        SetWorldPose(PlayerRig.FootPos, new Vector3(0f, PlayerRig.BodyYaw, 0f));
+        SetWorldPose(PlayerRig.FootPos, new Vector3(0f, PlayerRig.BodyYaw + BodyYawOffset, 0f));
         int n = SpineBones != null ? SpineBones.Length : 0;
         float per = n > 0 ? (PlayerRig.AimPitch * SpineAimGain * SpineAimSign / n) : 0f;
         for (int i = 0; i < n; i++)
             if (SpineBones[i] != null && SpineBones[i] != "")
                 SetBoneAdditiveRotation(SpineBones[i], new Vector3(per, 0f, 0f));
+    }
+
+    // Walk the rig's mesh children: deactivate helper meshes, tint the remaining surfaces.
+    private void ApplyFpMeshLook()
+    {
+        long[] kids = Scene.Children(EntityId);
+        for (int i = 0; kids != null && i < kids.Length; i++) ApplyFpMeshLookTo(kids[i]);
+    }
+    private void ApplyFpMeshLookTo(long e)
+    {
+        string n = Scene.NameOf(e);
+        bool hide = false;
+        for (int i = 0; HideMeshChildren != null && i < HideMeshChildren.Length; i++) if (HideMeshChildren[i] == n) hide = true;
+        if (hide) { Scene.SetActive(e, false); return; }
+        if (TintArms) Scene.SetColorOf(e, ArmTint.X, ArmTint.Y, ArmTint.Z);
+        long[] kids = Scene.Children(e);
+        for (int i = 0; kids != null && i < kids.Length; i++) ApplyFpMeshLookTo(kids[i]);
     }
 
     private void Overlays(bool fireBtn, bool reloadBtn, float dt)
@@ -258,12 +237,5 @@ public class LocomotionController : VortexBehaviour
             case 7: ads = true; fire = edge; break;
             case 8: reload = edge; break;
         }
-    }
-
-    private static float EnvF(string k, float d)
-    {
-        string v = System.Environment.GetEnvironmentVariable(k);
-        float f;
-        return v != null && float.TryParse(v, System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out f) ? f : d;
     }
 }

@@ -1,48 +1,60 @@
 {
-  "id": "9d7e2f10-4b3c-4a51-8e62-1f0a9b8c9101",
-  "name": "Shell",
-  "isActive": true,
-  "isStatic": false,
-  "layer": 0,
-  "tag": "Untagged",
-  "children": [ ],
-  "components": [
-    {
-      "__type": "Transform",
-      "id": "9d7e2f10-4b3c-4a51-8e62-1f0a9b8c9102",
-      "isEnabled": true,
-      "localPosition": { "x": 0, "y": 0, "z": 0 },
-      "localRotation": { "x": 0, "y": 0, "z": 0 },
-      "localScale": { "x": 2.6, "y": 2.6, "z": 2.6 }
-    },
-    {
-      "__type": "MeshRenderer",
-      "id": "9d7e2f10-4b3c-4a51-8e62-1f0a9b8c9103",
-      "isEnabled": true,
-      "meshPath": "Assets/Models/Viewmodel/casing_9mm.glb",
-      "materialPath": null,
-      "castShadows": false,
-      "receiveShadows": true,
-      "renderLayer": 0,
-      "colorR": 1,
-      "colorG": 1,
-      "colorB": 1,
-      "colorA": 1,
-      "metallic": 0.9,
-      "roughness": 0.3,
-      "normalStrength": 1,
-      "texturePath": null,
-      "shaderPath": null
-    },
-    {
-      "__type": "Script",
-      "id": "9d7e2f10-4b3c-4a51-8e62-1f0a9b8c9104",
-      "isEnabled": true,
-      "scriptPath": "Assets/Scripts/World/ShellCasing.cs",
-      "scriptClassName": "ShellCasing"
-    }
-  ],
-  "isFolder": false,
-  "prefabPath": null,
-  "isLockedToParent": false
+ "id": "9d7e2f10-4b3c-4a51-8e62-1f0a9b8c9101",
+ "name": "Shell",
+ "isActive": true,
+ "isStatic": false,
+ "layer": 0,
+ "tag": "Untagged",
+ "children": [],
+ "components": [
+  {
+   "__type": "Transform",
+   "id": "9d7e2f10-4b3c-4a51-8e62-1f0a9b8c9102",
+   "isEnabled": true,
+   "localPosition": {
+    "x": 0,
+    "y": 0,
+    "z": 0
+   },
+   "localRotation": {
+    "x": 0,
+    "y": 0,
+    "z": 0
+   },
+   "localScale": {
+    "x": 2.0,
+    "y": 2.0,
+    "z": 2.0
+   }
+  },
+  {
+   "__type": "MeshRenderer",
+   "id": "9d7e2f10-4b3c-4a51-8e62-1f0a9b8c9103",
+   "isEnabled": true,
+   "meshPath": "Assets/Models/Viewmodel/casing_9mm.glb",
+   "materialPath": null,
+   "castShadows": false,
+   "receiveShadows": true,
+   "renderLayer": 0,
+   "colorR": 1,
+   "colorG": 1,
+   "colorB": 1,
+   "colorA": 1,
+   "metallic": 0.9,
+   "roughness": 0.3,
+   "normalStrength": 1,
+   "texturePath": null,
+   "shaderPath": null
+  },
+  {
+   "__type": "Script",
+   "id": "9d7e2f10-4b3c-4a51-8e62-1f0a9b8c9104",
+   "isEnabled": true,
+   "scriptPath": "Assets/Scripts/World/ShellCasing.cs",
+   "scriptClassName": "ShellCasing"
+  }
+ ],
+ "isFolder": false,
+ "prefabPath": null,
+ "isLockedToParent": false
 }

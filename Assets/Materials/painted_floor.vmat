@@ -1,0 +1,35 @@
+﻿{
+  "Name": "painted_floor",
+  "Version": "2.0",
+  "BaseColor": [
+    1,
+    1,
+    1,
+    1
+  ],
+  "Metallic": 0,
+  "Roughness": 1,
+  "AmbientOcclusion": 1,
+  "NormalStrength": 1,
+  "HeightScale": 0.0,
+  "AlphaCutoff": 0.5,
+  "UseDirectXNormals": true,
+  "EmissiveStrength": 0.0,
+  "TwoSided": false,
+  "BlendMode": "Opaque",
+  "CastShadows": true,
+  "ReceiveShadows": true,
+  "AlbedoTexture": "../Textures/concrete_floor_painted/concrete_floor_painted_diff_1k.jpg",
+  "NormalTexture": "../Textures/concrete_floor_painted/concrete_floor_painted_nor_dx_1k.jpg",
+  "RoughnessTexture": "../Textures/concrete_floor_painted/concrete_floor_painted_rough_1k.jpg",
+  "FootstepSound": "Assets/Audio/step_concrete.wav",
+  "UVTiling": [
+    6,
+    4
+  ],
+  "UVOffset": [
+    0,
+    0
+  ],
+  "AOTexture": "../Textures/concrete_floor_painted/concrete_floor_painted_ao_1k.jpg"
+}

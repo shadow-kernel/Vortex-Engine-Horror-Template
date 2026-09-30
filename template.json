@@ -1,7 +1,7 @@
 {
   "name": "Horror Starter",
-  "tagline": "CoD-feel cellar shooter — walk, aim, shoot in a lit brick basement",
-  "description": "A ready-to-play first-person cellar shooter with Call-of-Duty-style feel: snappy grounded WASD movement with sprint, crouch, slide and jump; mouse-look; a held automatic weapon with ADS, recoil pattern, muzzle flash, shell ejection and reload; and a full closed brick-and-concrete basement (generator hall, side stores, spawn hall, sliding doors) lit by warm flickering bulbs, a key light and real point/spot lighting, with fog, bloom, SSAO and grain. Everything gameplay lives in plain project scripts you can read and change — movement, weapon and lighting are all VortexBehaviour scripts.",
+  "tagline": "CoD-feel night shooter — an open industrial yard plus a lit brick cellar",
+  "description": "A ready-to-play first-person shooter with Call-of-Duty-style feel: snappy grounded WASD movement with sprint, tactical sprint, crouch, slide, jump and auto-mantle; mouse-look with ADS sensitivity scaling; a two-weapon loadout (Vityaz, MP5) held by a skinned arms rig with procedural CoD-style viewmodel, ADS, recoil, muzzle flash, shell ejection, reload choreography and weapon swap; a third-person body for external cameras. Two maps: the open 120 x 120 m night YARD (warehouses, containers, checkpoint, storage yard, 30+ CC0 Poly Haven props, street/security lights, moon, fog) and the closed brick CELLAR. Everything gameplay lives in plain project scripts you can read and change.",
   "preview": "preview.png",
   "project": ".",
   "order": 1

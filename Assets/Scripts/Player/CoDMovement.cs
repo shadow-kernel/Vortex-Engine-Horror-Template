@@ -56,6 +56,21 @@ public static class PlayerRig
     // spring — the VIEW kicks with every shot (not just the gun), so aim climbs like a real shooter.
     public static float CamKickPitch, CamKickYaw;
 
+    // ---- procedural first-person viewmodel bridge (v2.8, see ViewmodelRig.cs) ----
+    public static float  Roll;                     // camera roll (deg) — strafe lean / slide; the gun rolls with the view
+    public static Weapon ActiveWeapon;             // the equipped FP weapon's behaviour (poses, grip points); null = unarmed
+    public static long   FpWeaponEntity;           // its entity (RenderLayer 1 copy)
+    public static float  ReloadProgress = -1f;     // 0..1 while the active firearm reloads, -1 otherwise
+    public static float  WeaponKickBack, WeaponKickPitch, WeaponKickYaw, WeaponKickRoll;   // per-shot impulses for the viewmodel spring
+    public static float  CurrentSpread;            // hip-fire cone (deg) the HUD crosshair mirrors — 0 while aiming
+    public static bool   Switching;                // weapon swap in progress (holster + draw): no firing, crosshair hidden
+    public static float  SwitchLower;              // 0..1 how far the viewmodel is lowered during the swap
+    public static bool   FireHeld;                 // trigger held on the active weapon (ends a sprint — no run-and-gun)
+    public static float  SprintOut;                // seconds until the weapon is back up after a sprint (fire blocked)
+    public static bool   Mantling;                 // climbing onto cover (weapon lowered, no fire)
+    public static float  HitMarkerT;               // seconds left of the hit-marker flash (set by Weapon on a hit)
+    public static bool   HitMarkerKill;            // the last hit killed (red marker)
+
     // ---- player vitals (written by PlayerHealth, read by HudManager) ----
     public static float Health = 100f, MaxHealth = 100f;
     public static int   Medkits = 3;
@@ -69,7 +84,8 @@ public static class PlayerRig
 
 // Call-of-Duty-feel first-person movement — 100% game-side, tweak freely.
 // WASD move · mouse look · Shift sprint · double-tap-W tactical sprint · Ctrl/C crouch ·
-// crouch-while-sprinting = SLIDE · Space jump · RMB aims (slows you + narrows FOV) · ESC pause (Q quits).
+// crouch-while-sprinting = SLIDE · Space jump (auto-mantles chest-high cover) · RMB aims (slows you, narrows the
+// FOV and scales the mouse sensitivity with it) · Q/E lean · ESC settings menu.
 //
 // Feel notes vs. the horror-starter Quake controller: higher ground accel + friction = snappy,
 // grounded, "instant" CoD response (not floaty). Sprint punches the FOV out; ADS pulls it in.
@@ -81,40 +97,49 @@ public static class PlayerRig
 public class CoDMovement : VortexBehaviour
 {
     // ---- speeds (m/s) ----
-    public float WalkSpeed      = 4.6f;
-    public float SprintSpeed    = 6.3f;
-    public float TacSprintSpeed = 7.4f;
-    public float CrouchSpeed    = 2.6f;
-    public float AdsSpeed       = 3.1f;
+    public float WalkSpeed      = 3.9f;
+    public float SprintSpeed    = 5.8f;
+    public float TacSprintSpeed = 6.8f;
+    public float CrouchSpeed    = 2.0f;
+    public float AdsSpeed       = 2.7f;
+    public float EyeHeight      = 1.7f;   // camera above the feet (the Player entity is placed at eye height)
 
     // ---- look ----
     public float MouseSens    = 0.09f;
     public float PadLookSpeed = 230f;
 
     // ---- jump / gravity ----
-    public float JumpSpeed = 6.6f;
-    public float Gravity   = 22f;
+    public float JumpSpeed = 5.8f;     // ~0.85 m — CoD jumps are low; chest-high cover is MANTLED instead
+    public float Gravity   = 20f;
 
     // ---- stance ----
     public float CrouchDrop = 0.62f;   // eye drop when crouched
     public float StepHeight = 0.4f;    // auto-climb (curbs, low crates)
+    // ---- mantle (CoD): jumping INTO chest-high cover (barriers, crates, car bonnets) vaults onto it — a real
+    // scripted climb (ledge found by raycasts, eased up-then-forward motion), not a physics hack ----
+    public float MantleHeight    = 1.2f;   // tallest ledge (above the feet) that can be climbed
+    public float MantleMinHeight = 0.5f;   // lower ledges are just stepped over (StepHeight)
+    public float MantleReach     = 0.9f;   // how far ahead a ledge is detected
+    public float MantleTime      = 0.42f;
+    public float SprintOutTime   = 0.22f;  // after a sprint the gun needs this long to come up before it can fire
 
     // ---- FOV ----
     public float BaseFov      = 80f;
     public float SprintFovAdd = 9f;
     public float TacFovAdd    = 15f;
-    public float AdsWorldFov  = 50f;   // scope zoom
+    public float AdsWorldFov  = 62f;   // holo/reflex zoom (a scope would go lower)
+    public float AdsSensScale = 1f;    // 1 = CoD "relative" ADS sensitivity: turn speed scales with the FOV ratio while aiming
     public float FovLerp      = 9f;
 
     // ---- accel / friction ---- (tuned for a smoother, more responsive L4D2-ish glide: quicker to top speed,
     // a touch more air control so mid-air steering doesn't feel stuck, slightly less grabby friction)
-    public float GroundAccel = 19f;
-    public float AirAccel    = 3.2f;
-    public float Friction    = 8.5f;
+    public float GroundAccel = 14f;
+    public float AirAccel    = 2.2f;
+    public float Friction    = 7.5f;
     public float SlideFriction = 3.0f;
 
     // ---- slide ----
-    public float SlideBoost = 3.4f;    // extra speed injected at slide start
+    public float SlideBoost = 2.6f;    // extra speed injected at slide start
     public float SlideTime  = 0.65f;
     public float SlideDrop  = 0.95f;   // eye drop during slide
 
@@ -145,8 +170,19 @@ public class CoDMovement : VortexBehaviour
     public  float LeanRoll = 14f, LeanOffset = 0.42f;
     // bunny-hop guard
     private float _jumpCd;
-    public  float JumpCooldown = 0.32f, MaxHorizSpeed = 9.5f;
+    public  float JumpCooldown = 0.45f, MaxHorizSpeed = 8.5f;
     private float _speedSmooth;        // smoothed horizontal speed (for bob)
+    // The capsule's FEET are the one authoritative position; the camera (this entity) is derived from them every
+    // frame (eye height + lean offset). Deriving the feet back from the camera made the lean offset integrate into
+    // movement — the player drifted sideways while leaning.
+    private Vector3 _feet;
+    private bool  _mantling; private float _mantleT; private Vector3 _mantleFrom, _mantleTo;
+    private float _sprintOutT; private bool _wasSprinting;
+    private float _stepSmooth;         // camera offset that eases out abrupt grounded height changes (curbs, stairs)
+    private bool  _adsKeyHeld, _adsLatched;
+    public  float StepSmoothing = 14f; // 1/s
+    private bool  _moveLog = System.Environment.GetEnvironmentVariable("VM_MOVELOG") == "1";
+    private float _logT;
 
     // ---- orbit inspector (P) ----
     private bool  _inspect, _insHeld, _fpHidden;
@@ -158,8 +194,9 @@ public class CoDMovement : VortexBehaviour
     public override void Start()
     {
         Cursor.Locked = true;
-        _standEyeY = Position.Y;
+        _standEyeY = EyeHeight;
         _eyeCur = _standEyeY;
+        _feet = new Vector3(Position.X, Position.Y - EyeHeight, Position.Z);
         Vector3 r = Rotation; _pitch = r.X; _yaw = r.Y;
         _levelCapture = System.Environment.GetEnvironmentVariable("VM_LEVEL") == "1";   // capture-only: lock a clean level view
         _forceAds     = System.Environment.GetEnvironmentVariable("VM_ADS") == "1";     // capture-only: force aim-down-sight
@@ -284,8 +321,12 @@ public class CoDMovement : VortexBehaviour
     private void Move(float dt)
     {
         // ---------------- look ----------------
-        float dLookX = Input.MouseDeltaX * UserSettings.MouseSensitivity;
-        float dLookY = Input.MouseDeltaY * UserSettings.MouseSensitivity;
+        // ADS sensitivity: while aiming the world FOV narrows, so the same mouse delta would turn the view visibly
+        // faster on screen — scale it by the current FOV ratio (CoD's "relative" setting), tunable via AdsSensScale.
+        float sens = UserSettings.MouseSensitivity;
+        if (_wantAdsFov) sens *= 1f + ((_fovCur / System.Math.Max(1f, UserSettings.Fov)) - 1f) * AdsSensScale;
+        float dLookX = Input.MouseDeltaX * sens;
+        float dLookY = Input.MouseDeltaY * sens;
         _yaw   += dLookX;
         _pitch += dLookY;
         if (_levelCapture) { _pitch = _lookDown ? 42f : 0f; _yaw = 0f; dLookX = 0f; dLookY = 0f; }   // capture-only: ignore RDP mouse drift, hold a level (or look-down) view
@@ -306,27 +347,39 @@ public class CoDMovement : VortexBehaviour
         _yaw %= 360f;
 
         // ---------------- inputs / stance ----------------
-        bool ads    = Input.GetKey("RButton") || Input.LeftTrigger > 0.5f || _forceAds;
+        // aim: hold RMB (or Left Alt — a trackpad cannot hold right AND left click); with UserSettings.AdsToggle a
+        // press latches the aim until the next press (CoD "ADS: toggle")
+        bool adsKey = Input.GetKey("RButton") || Input.GetKey("LeftAlt") || Input.LeftTrigger > 0.5f;
+        if (UserSettings.AdsToggle) { if (adsKey && !_adsKeyHeld) _adsLatched = !_adsLatched; }
+        else _adsLatched = false;
+        _adsKeyHeld = adsKey;
+        bool ads    = ((UserSettings.AdsToggle ? _adsLatched : adsKey) || _forceAds) && !_mantling;
+        if (_mantling) _adsLatched = false;
         bool crouch = Input.GetKey("LeftCtrl") || Input.GetKey("C") || Input.GetGamepadButton("B");
         bool wKey   = Input.GetKey("W");
         bool fwdHeld = wKey || Input.LeftStickY > 0.3f;
+        bool fireHeld = PlayerRig.FireHeld;   // the weapon reports the trigger: firing ENDS a sprint (no run-and-gun)
 
         // double-tap W -> tactical sprint latch
         if (_wTapTimer > 0f) _wTapTimer -= dt;
         if (wKey && !_wHeld) { if (_wTapTimer > 0f) _tacSprint = true; _wTapTimer = 0.28f; }
         _wHeld = wKey;
-
         bool sprintKey = Input.GetKey("LeftShift") || Input.GetGamepadButton("LeftStick");
-        bool sprint = sprintKey && fwdHeld && !ads && !crouch && _grounded && _leanTarget == 0;
+        bool sprint = sprintKey && fwdHeld && !ads && !crouch && _grounded && _leanTarget == 0 && !fireHeld && !_mantling;
         if (!sprint) _tacSprint = false;               // dropping sprint clears tac latch
         bool tac = sprint && _tacSprint;
+        // sprint-out: after a sprint the gun has to come back up before it can fire
+        if (_wasSprinting && !sprint) _sprintOutT = SprintOutTime;
+        _wasSprinting = sprint;
+        if (_sprintOutT > 0f) _sprintOutT -= dt;
+        PlayerRig.SprintOut = sprint ? SprintOutTime : (_sprintOutT > 0f ? _sprintOutT : 0f);
 
         // ---------------- Q / E lean (R6-style toggle) ----------------
         bool qKey = Input.GetKey("Q"); bool eKey = Input.GetKey("E");
         if (qKey && !_qHeld) _leanTarget = (_leanTarget == -1) ? 0 : -1;   // Q -> lean left / re-press to centre
         if (eKey && !_eHeld) _leanTarget = (_leanTarget ==  1) ? 0 :  1;   // E -> lean right / re-press to centre
         _qHeld = qKey; _eHeld = eKey;
-        if (sprint || _sliding) _leanTarget = 0;                            // can't lean while sprinting/sliding
+        if (sprint || _sliding || _mantling) _leanTarget = 0;              // can't lean while sprinting/sliding/climbing
         _leanCur += (_leanTarget - _leanCur) * System.Math.Min(1f, 11f * dt);
 
         // ---------------- wish direction ----------------
@@ -347,7 +400,7 @@ public class CoDMovement : VortexBehaviour
 
         // ---------------- slide start ----------------
         bool slideKey = crouch;
-        if (!_sliding && slideKey && (sprint || tac) && _speedSmooth > SprintSpeed * 0.7f)
+        if (!_sliding && !_mantling && slideKey && (sprint || tac) && _speedSmooth > SprintSpeed * 0.7f)
         {
             _sliding = true; _slideT = SlideTime;
             _vx += wishX * SlideBoost; _vz += wishZ * SlideBoost;
@@ -366,55 +419,86 @@ public class CoDMovement : VortexBehaviour
                        :          WalkSpeed;
 
         // ---------------- accelerate ----------------
-        if (_grounded)
+        if (!_mantling)
         {
-            ApplyFriction(_sliding ? SlideFriction : Friction, dt);
-            if (!_sliding) Accelerate(wishX, wishZ, maxSpeed, GroundAccel, dt);
-            else           Accelerate(wishX, wishZ, maxSpeed, GroundAccel * 0.25f, dt);
+            if (_grounded)
+            {
+                ApplyFriction(_sliding ? SlideFriction : Friction, dt);
+                if (!_sliding) Accelerate(wishX, wishZ, maxSpeed, GroundAccel, dt);
+                else           Accelerate(wishX, wishZ, maxSpeed, GroundAccel * 0.25f, dt);
+            }
+            else Accelerate(wishX, wishZ, maxSpeed, AirAccel * (crouch ? 1f : 0.7f), dt);   // little air control
         }
-        else Accelerate(wishX, wishZ, maxSpeed, AirAccel * (crouch ? 1f : 0.7f), dt);   // less air control -> harder to air-strafe
         if (float.IsNaN(_vx)) _vx = 0f; if (float.IsNaN(_vz)) _vz = 0f; if (float.IsNaN(_vy)) _vy = 0f;
 
         // bunny-hop guard: hard-cap absolute horizontal speed so chained air-strafe jumps can't build unlimited speed
         float hsp = (float)System.Math.Sqrt(_vx * _vx + _vz * _vz);
         if (hsp > MaxHorizSpeed) { float s = MaxHorizSpeed / hsp; _vx *= s; _vz *= s; }
 
-        // ---------------- jump / gravity ----------------
+        // ---------------- jump / mantle / gravity ----------------
         bool jump = Input.GetKey("Space") || Input.GetGamepadButton("A");
+        bool jumpPressed = jump && !_jumpHeld;
         if (_jumpCd > 0f) _jumpCd -= dt;
-        if (_grounded && jump && !_jumpHeld && !_sliding && _jumpCd <= 0f) { _vy = JumpSpeed; _grounded = false; _jumpCd = JumpCooldown; }
-        else if (_grounded && _vy < 0f) _vy = 0f;
-        _vy -= Gravity * dt;
+        if (!_mantling && wl > 0.001f)
+        {
+            // jumping INTO a ledge from the ground, or drifting into one mid-air: climb it instead of bumping
+            bool want = (jumpPressed && _grounded && _jumpCd <= 0f) || (!_grounded && _vy < 2.5f && (_vx * wishX + _vz * wishZ) > 1.0f);
+            Vector3 ledge;
+            if (want && TryFindLedge(wishX, wishZ, out ledge)) StartMantle(ledge);
+        }
+        if (!_mantling)
+        {
+            if (_grounded && jumpPressed && !_sliding && _jumpCd <= 0f) { _vy = JumpSpeed; _grounded = false; _jumpCd = JumpCooldown; }
+            else if (_grounded && _vy < 0f) _vy = 0f;
+            _vy -= Gravity * dt;
+        }
         _jumpHeld = jump;
 
         // ---------------- stance eye height ----------------
         float targetEye = _standEyeY - (_sliding ? SlideDrop : crouch ? CrouchDrop : 0f);
         _eyeCur += (targetEye - _eyeCur) * System.Math.Min(1f, 12f * dt);
 
-        // ---------------- move through collision ----------------
-        Vector3 cam = Position;
-        Vector3 feet = new Vector3(cam.X, cam.Y - _eyeCur, cam.Z);
-        Vector3 disp = new Vector3(_vx * dt, _vy * dt, _vz * dt);
-        feet = Physics.MoveCharacter(feet, CapsuleRadius, CapsuleHeight, disp, EntityId);
-        _grounded = Physics.Grounded;
-        if (_grounded && _vy < 0f)
+        // ---------------- move through collision (feet) ----------------
+        if (_mantling)
         {
-            // landing dip scaled by impact speed
-            if (!_prevGrounded)
-            {
-                float impact = -_vy;
-                if (impact > 3f) CameraFX.Kick(new Vector3(-System.Math.Min(3.5f, impact * 0.35f), 0f, 0f),
-                                               new Vector3(0f, -System.Math.Min(0.05f, impact * 0.006f), 0f));
-            }
-            _vy = 0f;
+            _mantleT += dt;
+            float t = _mantleT / MantleTime; if (t > 1f) t = 1f;
+            float up = SmoothStep(Clamp01(t / 0.6f)), fwd = SmoothStep(Clamp01((t - 0.35f) / 0.65f));   // up first, then over
+            _feet = new Vector3(_mantleFrom.X + (_mantleTo.X - _mantleFrom.X) * fwd, _mantleFrom.Y + (_mantleTo.Y - _mantleFrom.Y) * up, _mantleFrom.Z + (_mantleTo.Z - _mantleFrom.Z) * fwd);
+            _vx = 0f; _vz = 0f; _vy = 0f; _grounded = true;
+            if (t >= 1f) { _mantling = false; PlayerRig.Mantling = false; _jumpCd = 0.25f; }
         }
-        // R6 lean: shift the eye sideways along Right so you peek past a corner (roll added below)
-        Vector3 lr = Right;
-        Position = new Vector3(feet.X + lr.X * _leanCur * LeanOffset, feet.Y + _eyeCur, feet.Z + lr.Z * _leanCur * LeanOffset);
+        else
+        {
+            Vector3 disp = new Vector3(_vx * dt, _vy * dt, _vz * dt);
+            float feetYBefore = _feet.Y; bool groundedBefore = _grounded;
+            _feet = Physics.MoveCharacter(_feet, CapsuleRadius, CapsuleHeight, disp, EntityId);
+            _grounded = Physics.Grounded;
+            // step smoothing (CoD): a curb/stair changes the feet height in one frame — the camera eases into it
+            float stepDy = _feet.Y - feetYBefore - _vy * dt;
+            if (_grounded && groundedBefore && System.Math.Abs(stepDy) > 0.04f && System.Math.Abs(stepDy) < 0.6f) _stepSmooth -= stepDy;
+            if (_grounded && _vy < 0f)
+            {
+                // landing dip scaled by impact speed
+                if (!_prevGrounded)
+                {
+                    float impact = -_vy;
+                    if (impact > 3f) CameraFX.Kick(new Vector3(-System.Math.Min(3.5f, impact * 0.35f), 0f, 0f),
+                                                   new Vector3(0f, -System.Math.Min(0.05f, impact * 0.006f), 0f));
+                }
+                _vy = 0f;
+            }
+        }
         _prevGrounded = _grounded;
 
+        // ---------------- camera from the feet: eye height + step smoothing + R6 lean (sideways peek along Right) ----------------
+        _stepSmooth -= _stepSmooth * System.Math.Min(1f, StepSmoothing * dt);
+        Position = new Vector3(_feet.X + rX * _leanCur * LeanOffset, _feet.Y + _eyeCur + _stepSmooth, _feet.Z + rZ * _leanCur * LeanOffset);
+
         // ---------------- camera roll (strafe lean + slide + Q/E lean) ----------------
-        float rollTarget = -strafe * (_sliding ? 6.5f : 1.6f) + _leanCur * LeanRoll;
+        // engine roll: positive tilts the head to the LEFT (Z rotation in the row-vector ZXY convention) — lean
+        // left (Q, _leanCur = -1) must therefore roll POSITIVE, and strafing tilts INTO the strafe.
+        float rollTarget = -strafe * (_sliding ? 6.5f : 1.6f) - _leanCur * LeanRoll;
         _rollCur += (rollTarget - _rollCur) * System.Math.Min(1f, 8f * dt);
 
         // ---- camera recoil: consume the weapon's per-shot impulses, spring back to rest → the VIEW kicks with fire ----
@@ -424,21 +508,21 @@ public class CoDMovement : VortexBehaviour
         _camRecYawVel += (-CamRecoilStiff * _camRecYaw - CamRecoilDamp * _camRecYawVel) * dt; _camRecYaw += _camRecYawVel * dt;
 
         Rotation = new Vector3(_pitch + _camRecPitch, _yaw + _camRecYaw, _rollCur);
+        PlayerRig.Roll = _rollCur;
 
-        // ---------------- view bob (speed-scaled) ----------------
+        // ---------------- view bob (speed-scaled, subtle) ----------------
         float hSpeed = (float)System.Math.Sqrt(_vx * _vx + _vz * _vz);
         _speedSmooth += (hSpeed - _speedSmooth) * System.Math.Min(1f, 10f * dt);
         float moveN = System.Math.Min(1f, _speedSmooth / SprintSpeed);
-        if (_grounded && !ads)
+        if (_grounded && !ads && !_mantling)
         {
-            // gentler view bob than before (less roll/nausea) — the weapon no longer jitters, so the bob reads clean
-            float amp  = 0.005f + 0.016f * moveN;
-            float rot  = 0.08f  + 0.38f  * moveN;
-            float freq = 1.4f   + 3.4f   * moveN;
+            float amp  = 0.004f + 0.011f * moveN;
+            float rot  = 0.06f  + 0.30f  * moveN;
+            float freq = 1.4f   + 3.0f   * moveN;
             CameraFX.Sway(0, amp, rot, freq);
         }
         else if (ads)   CameraFX.Sway(0, 0.0016f, 0.06f, 0.7f);   // steadied breathing
-        else            CameraFX.Sway(0, 0.004f, 0.12f, 0.5f);    // airborne
+        else            CameraFX.Sway(0, 0.004f, 0.12f, 0.5f);    // airborne / climbing
 
         // remember stance for FOV
         _wantSprintFov = sprint; _wantTacFov = tac; _wantAdsFov = ads;
@@ -451,14 +535,52 @@ public class CoDMovement : VortexBehaviour
         PlayerRig.Grounded = _grounded; PlayerRig.Ready = true;
 
         // ---- world-character state (#178): feet anchor, body facing, aim pitch, locomotion intent ----
-        PlayerRig.FootPos = new Vector3(feet.X, feet.Y, feet.Z);   // ground contact (feet already resolved this frame)
+        PlayerRig.FootPos = _feet;                                 // ground contact (feet already resolved this frame)
         PlayerRig.BodyYaw = _yaw;                                  // body turns with the look (turn-in-place is a later refinement)
         PlayerRig.AimPitch = _pitch + _camRecPitch;                // includes recoil so the muzzle climbs with fire
         PlayerRig.MoveForwardN = wishX * fX + wishZ * fZ;          // +1 = running the way you face, -1 = backpedal
         PlayerRig.MoveRightN   = wishX * rX + wishZ * rZ;          // +1 = strafe right
         PlayerRig.IsSprinting = sprint || tac; PlayerRig.IsCrouched = crouch;
         PlayerRig.IsSliding = _sliding; PlayerRig.IsAirborne = !_grounded;
+
+        if (_moveLog)
+        {
+            _logT += dt;
+            Debug.Log("[MV] t=" + _logT.ToString("0.000", System.Globalization.CultureInfo.InvariantCulture) + " feet=" + _feet + " v=" + new Vector3(_vx, _vy, _vz)
+                + " g=" + (_grounded ? 1 : 0) + " sprint=" + (sprint ? 1 : 0) + " mantle=" + (_mantling ? 1 : 0) + " lean=" + _leanCur.ToString("0.00", System.Globalization.CultureInfo.InvariantCulture)
+                + " roll=" + _rollCur.ToString("0.0", System.Globalization.CultureInfo.InvariantCulture) + " cam=" + Position + " ammo=" + PlayerRig.Ammo + " ads=" + (ads ? 1 : 0) + " fire=" + (fireHeld ? 1 : 0) + " so=" + PlayerRig.SprintOut.ToString("0.00", System.Globalization.CultureInfo.InvariantCulture));
+        }
     }
+
+    /// <summary>Look for a climbable ledge in the move direction: a blocking face at knee height, a walkable top between
+    /// MantleMinHeight and MantleHeight above the feet, and standing room above it.</summary>
+    private bool TryFindLedge(float dirX, float dirZ, out Vector3 ledge)
+    {
+        ledge = Vector3.Zero;
+        Vector3 fwd = new Vector3(dirX, 0f, dirZ);
+        RaycastHit face;
+        if (!Physics.Raycast(new Vector3(_feet.X, _feet.Y + 0.35f, _feet.Z), fwd, MantleReach + CapsuleRadius, out face)) return false;
+        float tx = face.Point.X + dirX * 0.4f, tz = face.Point.Z + dirZ * 0.4f;
+        float topY = _feet.Y + MantleHeight + 0.4f;
+        RaycastHit top;
+        if (!Physics.Raycast(new Vector3(tx, topY, tz), new Vector3(0f, -1f, 0f), MantleHeight + 0.4f - MantleMinHeight, out top)) return false;
+        float h = top.Point.Y - _feet.Y;
+        if (h < MantleMinHeight || h > MantleHeight || top.Normal.Y < 0.7f) return false;
+        if (Physics.Raycast(new Vector3(tx, top.Point.Y + 0.1f, tz), Vector3.Up, CapsuleHeight - 0.05f)) return false;   // no headroom
+        ledge = new Vector3(tx, top.Point.Y, tz);
+        return true;
+    }
+
+    private void StartMantle(Vector3 ledge)
+    {
+        _mantling = true; _mantleT = 0f; _mantleFrom = _feet; _mantleTo = new Vector3(ledge.X, ledge.Y + 0.02f, ledge.Z);
+        _vx = 0f; _vz = 0f; _vy = 0f; _sliding = false; _tacSprint = false;
+        PlayerRig.Mantling = true;
+        CameraFX.Kick(new Vector3(2.5f, 0f, 0f), new Vector3(0f, -0.03f, 0f));
+    }
+
+    private static float Clamp01(float v) { return v < 0f ? 0f : (v > 1f ? 1f : v); }
+    private static float SmoothStep(float t) { return t * t * (3f - 2f * t); }
 
     private bool _wantSprintFov, _wantTacFov, _wantAdsFov;
 

@@ -1,0 +1,28 @@
+{
+  "entries": [
+    {
+      "guid": "",
+      "clipPath": "Assets/Audio/rifle_shot_1.wav",
+      "weight": 1
+    },
+    {
+      "guid": "",
+      "clipPath": "Assets/Audio/rifle_shot_2.wav",
+      "weight": 1
+    },
+    {
+      "guid": "",
+      "clipPath": "Assets/Audio/rifle_shot_3.wav",
+      "weight": 1
+    },
+    {
+      "guid": "",
+      "clipPath": "Assets/Audio/rifle_shot_4.wav",
+      "weight": 1
+    }
+  ],
+  "pitchMin": 0.96,
+  "pitchMax": 1.04,
+  "volumeMin": 0.92,
+  "volumeMax": 1.0
+}

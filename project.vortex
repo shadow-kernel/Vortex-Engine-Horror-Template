@@ -1,31 +1,31 @@
 {
   "id": "9d7e2f10-4b3c-4a51-8e62-1f0a9b8c7601",
   "name": "Horror Starter",
-  "version": "1.0.0",
-  "engineVersion": "2.7.0",
+  "version": "1.1.0",
+  "engineVersion": "2.8.0",
   "lastModified": "/Date(1783774899166+0200)/",
   "createdAt": "/Date(1783774899174+0200)/",
-  "thumbnailPath": "C:\\Users\\Administrator\\Documents\\GitHub\\Vortex-Engine\\Templates\\HorrorStarter\\.ve\\icon.png",
-  "startSceneId": "9d7e2f10-4b3c-4a51-8e62-1f0a9b8c7701",
-  "lastOpenSceneId": "9d7e2f10-4b3c-4a51-8e62-1f0a9b8c7701",
+  "thumbnailPath": ".ve/icon.png",
+  "startSceneId": "9d7e2f10-4b3c-4a51-8e62-1f0a9b8c7801",
+  "lastOpenSceneId": "9d7e2f10-4b3c-4a51-8e62-1f0a9b8c7801",
   "formatVersion": 2,
   "scenes": [
+    {
+      "id": "9d7e2f10-4b3c-4a51-8e62-1f0a9b8c7801",
+      "name": "Yard",
+      "path": "Yard.vscene",
+      "loadOnStart": false
+    },
     {
       "id": "9d7e2f10-4b3c-4a51-8e62-1f0a9b8c7701",
       "name": "Demo",
       "path": "Demo.vscene",
       "loadOnStart": false
-    },
-    {
-      "id": "1be0e83a-aefe-4d8d-9f94-b6f1a6ec7af9",
-      "name": "New Scene 2",
-      "path": "New Scene 2.vscene",
-      "loadOnStart": false
     }
   ],
   "settings": {
-    "companyName": "DefaultCompany",
-    "productName": "My Game",
+    "companyName": "Vortex",
+    "productName": "Horror Starter",
     "defaultScreenWidth": 1920,
     "defaultScreenHeight": 1080,
     "fullscreenByDefault": false,

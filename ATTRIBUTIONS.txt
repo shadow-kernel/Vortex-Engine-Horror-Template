@@ -14,11 +14,40 @@ FIRST-PERSON ARMS — "First Person arms"
   Source:  https://sketchfab.com/3d-models/first-person-arms-e3c42c05b22944e5839deb8e003f0987
   License: CC-BY 4.0  (https://creativecommons.org/licenses/by/4.0/)
 
+GUNSHOT RECORDINGS — "Gunshot Sounds" (SKS, CZ-52, Mosin Nagant, shotgun)
+  Author:  Vincent Sevedge (OpenGameArt)
+  Source:  https://opengameart.org/content/gunshot-sounds
+  License: CC-BY 3.0 per the archive's creativecommons.txt
+           (https://creativecommons.org/licenses/by/3.0/)
+  Files:   Assets/Audio/rifle_shot_*.wav (SKS), pistol_shot_*.wav (CZ-52),
+           bolt_rifle_shot_*.wav (Mosin Nagant) — cut into single shots,
+           high-passed and normalized for this template.
+
 Modifications: models were re-scaled, re-oriented, combined into a single
 first-person viewmodel, and (weapon) retinted toward FDE for this template.
 
 -------------------------------------------------------
 Procedurally generated / CC0 (public domain), no attribution required:
-  - All level geometry (engine primitives) and the map layout.
-  - PBR textures for the environment: ambientCG & Poly Haven (CC0 1.0).
-  - Gun/reload/ambience audio: procedurally synthesized for this template.
+  - All level geometry (engine primitives) and the map layouts (Yard, Cellar).
+  - PBR textures for the environment: ambientCG & Poly Haven (CC0 1.0):
+    asphalt_02, gravel_floor_02, dirt, concrete_wall_007, brick_wall_10,
+    corrugated_iron_02, metal_plate_02, painted_concrete, concrete_floor_painted,
+    concrete_floor_02, concrete_wall_008, dirty_concrete, red_brick_03,
+    rusty_metal_04, worn_planks.
+  - Yard props (Assets/Models/Props, glTF, 1k textures): Poly Haven models,
+    CC0 1.0 (https://polyhaven.com/license): ammo_box, barrel_03, boulder_01,
+    cardboard_box_01, concrete_road_barrier, concrete_road_barrier_02, covered_car,
+    dead_tree_trunk, dead_tree_trunk_02, hand_truck, industrial_pastic_container,
+    industrial_storage_cart, metal_jerrycan, metal_trash_can, modular_chainlink_fence,
+    modular_industrial_pipes_01, old_military_crate, old_tyre, plastic_crate_01,
+    portable_generator, portable_searchlight, power_box_01, propane_tank,
+    rollershutter_door, security_light, street_lamp_01, trashbag, tree_stump_01,
+    utility_box_01, wooden_barrels_01, wooden_crate_01, wooden_ladder,
+    wooden_military_crate.
+  - Reload foley: "Gun reload sounds" by SpringySpringo (CC0,
+    https://opengameart.org/content/gun-reload-sounds -> rifle_reload.wav,
+    pistol_reload.wav, bolt_rack.wav) and "Gun Reload Sound Effects" by
+    Brian MacIntosh (CC0, https://opengameart.org/content/gun-reload-sound-effects
+    -> mag_in_1.wav, mag_in_2.wav, mag_out_1.wav); trimmed + normalized.
+  - Remaining gun layers (gun_sub low-end punch), dry click, ambience:
+    procedurally synthesized for this template.

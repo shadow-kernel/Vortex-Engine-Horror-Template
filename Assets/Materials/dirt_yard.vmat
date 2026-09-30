@@ -1,0 +1,35 @@
+﻿{
+  "Name": "dirt_yard",
+  "Version": "2.0",
+  "BaseColor": [
+    1,
+    1,
+    1,
+    1
+  ],
+  "Metallic": 0,
+  "Roughness": 1,
+  "AmbientOcclusion": 1,
+  "NormalStrength": 1,
+  "HeightScale": 0.0,
+  "AlphaCutoff": 0.5,
+  "UseDirectXNormals": true,
+  "EmissiveStrength": 0.0,
+  "TwoSided": false,
+  "BlendMode": "Opaque",
+  "CastShadows": true,
+  "ReceiveShadows": true,
+  "AlbedoTexture": "../Textures/dirt/dirt_diff_2k.jpg",
+  "NormalTexture": "../Textures/dirt/dirt_nor_dx_2k.jpg",
+  "RoughnessTexture": "../Textures/dirt/dirt_rough_2k.jpg",
+  "FootstepSound": "Assets/Audio/step_concrete.wav",
+  "UVTiling": [
+    10,
+    10
+  ],
+  "UVOffset": [
+    0,
+    0
+  ],
+  "AOTexture": "../Textures/dirt/dirt_ao_2k.jpg"
+}

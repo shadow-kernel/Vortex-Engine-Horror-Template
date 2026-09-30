@@ -1,0 +1,35 @@
+﻿{
+  "Name": "painted_concrete_wall",
+  "Version": "2.0",
+  "BaseColor": [
+    1,
+    1,
+    1,
+    1
+  ],
+  "Metallic": 0,
+  "Roughness": 1,
+  "AmbientOcclusion": 1,
+  "NormalStrength": 1,
+  "HeightScale": 0.0,
+  "AlphaCutoff": 0.5,
+  "UseDirectXNormals": true,
+  "EmissiveStrength": 0.0,
+  "TwoSided": false,
+  "BlendMode": "Opaque",
+  "CastShadows": true,
+  "ReceiveShadows": true,
+  "AlbedoTexture": "../Textures/painted_concrete/painted_concrete_diff_1k.jpg",
+  "NormalTexture": "../Textures/painted_concrete/painted_concrete_nor_dx_1k.jpg",
+  "RoughnessTexture": "../Textures/painted_concrete/painted_concrete_rough_1k.jpg",
+  "FootstepSound": "Assets/Audio/step_concrete.wav",
+  "UVTiling": [
+    4,
+    1.2
+  ],
+  "UVOffset": [
+    0,
+    0
+  ],
+  "AOTexture": "../Textures/painted_concrete/painted_concrete_ao_1k.jpg"
+}

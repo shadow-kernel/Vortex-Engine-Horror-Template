@@ -1,53 +1,502 @@
-{
-  "id": "b8c9d0e1-2233-4445-a667-88f9a0b1c201",
-  "name": "Weapon_MP5",
-  "isActive": true,
-  "isStatic": false,
-  "layer": 0,
-  "tag": "Untagged",
-  "children": [ ],
-  "components": [
+﻿{
+ "id": "ecbb964b-c063-4a5e-bc6d-298aee512538",
+ "name": "Weapon_MP5",
+ "isActive": true,
+ "isStatic": false,
+ "layer": 0,
+ "tag": "Untagged",
+ "children": [
+  {
+   "id": "f4a1e79d-b8fb-4fba-a419-82675570d727",
+   "name": "MuzzleFlash",
+   "isActive": true,
+   "isStatic": false,
+   "layer": 0,
+   "tag": "Untagged",
+   "children": [],
+   "components": [
     {
-      "__type": "Transform",
-      "id": "b8c9d0e1-2233-4445-a667-88f9a0b1c202",
-      "isEnabled": true,
-      "localPosition": { "x": 0, "y": 0, "z": 0 },
-      "localRotation": { "x": 0, "y": 0, "z": 0 },
-      "localScale": { "x": 1, "y": 1, "z": 1 }
+     "__type": "Transform",
+     "id": "fa811733-6e04-4477-bd44-49b6d716a5bb",
+     "isEnabled": true,
+     "localPosition": {
+      "x": 0.0,
+      "y": 0.03,
+      "z": 0.3
+     },
+     "localRotation": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+     },
+     "localScale": {
+      "x": 1,
+      "y": 1,
+      "z": 1
+     }
     },
     {
-      "__type": "MeshRenderer",
-      "id": "b8c9d0e1-2233-4445-a667-88f9a0b1c203",
-      "isEnabled": true,
-      "meshPath": "Assets/Models/Viewmodel/vm_mp5.glb",
-      "materialPath": null,
-      "castShadows": true,
-      "receiveShadows": true,
-      "renderLayer": 0,
-      "colorR": 0.22,
-      "colorG": 0.22,
-      "colorB": 0.24,
-      "colorA": 1,
-      "metallic": 0.45,
-      "roughness": 0.45,
-      "normalStrength": 1,
-      "texturePath": null,
-      "shaderPath": null
-    },
-    {
-      "__type": "Script",
-      "id": "b8c9d0e1-2233-4445-a667-88f9a0b1c204",
-      "isEnabled": true,
-      "scriptPath": "Assets/Scripts/Weapons/Pistol.cs",
-      "scriptClassName": "Pistol",
-      "fieldValues": [
-        { "name": "WeaponName", "value": "MP5" },
-        { "name": "Damage", "value": "30" },
-        { "name": "MagazineSize", "value": "20" }
-      ]
+     "__type": "Light",
+     "id": "25cd3dd2-9b37-4ffc-b803-59ee739d5973",
+     "isEnabled": true,
+     "lightType": 1,
+     "shadowType": 0,
+     "intensity": 0,
+     "range": 3.5,
+     "spotAngle": 30,
+     "innerSpotAngle": 21,
+     "colorR": 1,
+     "colorG": 0.72,
+     "colorB": 0.42,
+     "shadowStrength": 1,
+     "shadowBias": 0.05,
+     "shadowNormalBias": 0.4,
+     "shadowResolution": 2048,
+     "cullingMask": -1
     }
-  ],
-  "isFolder": false,
-  "prefabPath": null,
-  "isLockedToParent": false
+   ],
+   "isFolder": false,
+   "prefabPath": null,
+   "isLockedToParent": false
+  },
+  {
+   "id": "02db462c-db8c-4cbf-96ea-189734f69eb2",
+   "name": "Flash",
+   "isActive": false,
+   "isStatic": false,
+   "layer": 0,
+   "tag": "Untagged",
+   "children": [],
+   "components": [
+    {
+     "__type": "Transform",
+     "id": "f204b4eb-5f51-4566-9ae8-d602db48f101",
+     "isEnabled": true,
+     "localPosition": {
+      "x": 0.0,
+      "y": 0.03,
+      "z": 0.33
+     },
+     "localRotation": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+     },
+     "localScale": {
+      "x": 0.05,
+      "y": 0.05,
+      "z": 0.1
+     }
+    },
+    {
+     "__type": "MeshRenderer",
+     "id": "d09de9e9-ce51-4b41-af3e-f2933c6435f5",
+     "isEnabled": true,
+     "meshPath": "Primitive:Sphere",
+     "materialPath": "Assets/Materials/generator_glow.vmat",
+     "castShadows": false,
+     "receiveShadows": false,
+     "renderLayer": 0,
+     "colorR": 0.7,
+     "colorG": 0.7,
+     "colorB": 0.7,
+     "colorA": 1,
+     "metallic": 0,
+     "roughness": 0.5,
+     "normalStrength": 1,
+     "texturePath": null,
+     "shaderPath": null
+    }
+   ],
+   "isFolder": false,
+   "prefabPath": null,
+   "isLockedToParent": false
+  },
+  {
+   "id": "6459f04b-0c85-4d74-89b8-8835f0bb6628",
+   "name": "ViewLight",
+   "isActive": true,
+   "isStatic": false,
+   "layer": 0,
+   "tag": "Untagged",
+   "children": [],
+   "components": [
+    {
+     "__type": "Transform",
+     "id": "1e49c813-98c9-4139-927b-c54572d6d231",
+     "isEnabled": true,
+     "localPosition": {
+      "x": 0.0,
+      "y": 0.07,
+      "z": 0.0
+     },
+     "localRotation": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+     },
+     "localScale": {
+      "x": 1,
+      "y": 1,
+      "z": 1
+     }
+    },
+    {
+     "__type": "Light",
+     "id": "6f022e24-681c-4f87-a8f3-0a6f76bf0556",
+     "isEnabled": true,
+     "lightType": 1,
+     "shadowType": 0,
+     "intensity": 2.2,
+     "range": 1.4,
+     "spotAngle": 30,
+     "innerSpotAngle": 21,
+     "colorR": 1.0,
+     "colorG": 0.96,
+     "colorB": 0.9,
+     "shadowStrength": 1,
+     "shadowBias": 0.05,
+     "shadowNormalBias": 0.4,
+     "shadowResolution": 2048,
+     "cullingMask": -1
+    }
+   ],
+   "isFolder": false,
+   "prefabPath": null,
+   "isLockedToParent": false
+  },
+  {
+   "id": "c9e63c7f-6a52-4074-9827-b20095d14e7c",
+   "name": "Grip",
+   "isActive": true,
+   "isStatic": false,
+   "layer": 0,
+   "tag": "Untagged",
+   "children": [],
+   "components": [
+    {
+     "__type": "Transform",
+     "id": "ac994f9a-4344-4aa3-9003-bee7de5256b8",
+     "isEnabled": true,
+     "localPosition": {
+      "x": 0.02,
+      "y": -0.055,
+      "z": -0.04
+     },
+     "localRotation": {
+      "x": -11.296,
+      "y": 2.862,
+      "z": 91.114
+     },
+     "localScale": {
+      "x": 1,
+      "y": 1,
+      "z": 1
+     }
+    }
+   ],
+   "isFolder": false,
+   "prefabPath": null,
+   "isLockedToParent": true
+  },
+  {
+   "id": "1a2c489e-c7de-48d9-8b10-9d88a1fd2cb5",
+   "name": "SupportGrip",
+   "isActive": true,
+   "isStatic": false,
+   "layer": 0,
+   "tag": "Untagged",
+   "children": [],
+   "components": [
+    {
+     "__type": "Transform",
+     "id": "0dcdf131-6600-4e7b-9bc7-a9f6ea8a9dc3",
+     "isEnabled": true,
+     "localPosition": {
+      "x": -0.065,
+      "y": -0.055,
+      "z": 0.17
+     },
+     "localRotation": {
+      "x": -8.531,
+      "y": 90.0,
+      "z": 0.0
+     },
+     "localScale": {
+      "x": 1,
+      "y": 1,
+      "z": 1
+     }
+    }
+   ],
+   "isFolder": false,
+   "prefabPath": null,
+   "isLockedToParent": true
+  },
+  {
+   "id": "32ea9cce-dada-4461-a0e9-a24ff86a7d17",
+   "name": "Sight",
+   "isActive": true,
+   "isStatic": false,
+   "layer": 0,
+   "tag": "Untagged",
+   "children": [],
+   "components": [
+    {
+     "__type": "Transform",
+     "id": "4bb35ca2-b6f0-4961-a54f-50c68132e1ab",
+     "isEnabled": true,
+     "localPosition": {
+      "x": 0.0,
+      "y": 0.112,
+      "z": 0.056
+     },
+     "localRotation": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+     },
+     "localScale": {
+      "x": 1,
+      "y": 1,
+      "z": 1
+     }
+    }
+   ],
+   "isFolder": false,
+   "prefabPath": null,
+   "isLockedToParent": true
+  },
+  {
+   "id": "d0818acf-cb01-4f7f-abf4-104195691a4f",
+   "name": "Muzzle",
+   "isActive": true,
+   "isStatic": false,
+   "layer": 0,
+   "tag": "Untagged",
+   "children": [],
+   "components": [
+    {
+     "__type": "Transform",
+     "id": "7643b280-1b8f-4464-b5dc-339181d745e1",
+     "isEnabled": true,
+     "localPosition": {
+      "x": 0.0,
+      "y": 0.03,
+      "z": 0.3
+     },
+     "localRotation": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+     },
+     "localScale": {
+      "x": 1,
+      "y": 1,
+      "z": 1
+     }
+    }
+   ],
+   "isFolder": false,
+   "prefabPath": null,
+   "isLockedToParent": true
+  },
+  {
+   "id": "35721066-227d-4807-9e34-0a06659cd113",
+   "name": "Eject",
+   "isActive": true,
+   "isStatic": false,
+   "layer": 0,
+   "tag": "Untagged",
+   "children": [],
+   "components": [
+    {
+     "__type": "Transform",
+     "id": "c15b04a0-c719-4c02-8819-06f4491e2fd8",
+     "isEnabled": true,
+     "localPosition": {
+      "x": 0.02,
+      "y": 0.05,
+      "z": 0.0
+     },
+     "localRotation": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+     },
+     "localScale": {
+      "x": 1,
+      "y": 1,
+      "z": 1
+     }
+    }
+   ],
+   "isFolder": false,
+   "prefabPath": null,
+   "isLockedToParent": true
+  },
+  {
+   "id": "8b9a4e83-04c9-49df-9c48-93a59111ecc5",
+   "name": "MagWell",
+   "isActive": true,
+   "isStatic": false,
+   "layer": 0,
+   "tag": "Untagged",
+   "children": [],
+   "components": [
+    {
+     "__type": "Transform",
+     "id": "27188442-637d-48b1-8552-4179d386cba2",
+     "isEnabled": true,
+     "localPosition": {
+      "x": 0.0,
+      "y": -0.06,
+      "z": 0.05
+     },
+     "localRotation": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+     },
+     "localScale": {
+      "x": 1,
+      "y": 1,
+      "z": 1
+     }
+    }
+   ],
+   "isFolder": false,
+   "prefabPath": null,
+   "isLockedToParent": true
+  }
+ ],
+ "components": [
+  {
+   "__type": "Transform",
+   "id": "bf767beb-1e37-445f-b015-9ebf5c394d94",
+   "isEnabled": true,
+   "localPosition": {
+    "x": 0,
+    "y": 0,
+    "z": 0
+   },
+   "localRotation": {
+    "x": 0,
+    "y": 0,
+    "z": 0
+   },
+   "localScale": {
+    "x": 1,
+    "y": 1,
+    "z": 1
+   }
+  },
+  {
+   "__type": "MeshRenderer",
+   "id": "7b39154b-8eb1-478a-9731-8421675930ac",
+   "isEnabled": true,
+   "meshPath": "Assets/Models/Viewmodel/vm_weapon.glb",
+   "materialPath": null,
+   "castShadows": true,
+   "receiveShadows": true,
+   "renderLayer": 0,
+   "colorR": 0.85,
+   "colorG": 0.85,
+   "colorB": 0.85,
+   "colorA": 1,
+   "metallic": 0.55,
+   "roughness": 0.45,
+   "normalStrength": 1,
+   "texturePath": null,
+   "shaderPath": null
+  },
+  {
+   "__type": "Script",
+   "id": "0bb5b1c1-eb43-4170-885d-2c7bd6d8170a",
+   "isEnabled": true,
+   "scriptPath": "Assets/Scripts/Weapons/AssaultRifle.cs",
+   "scriptClassName": "AssaultRifle",
+   "fieldValues": [
+    {
+     "name": "WeaponName",
+     "value": "MP5"
+    },
+    {
+     "name": "Damage",
+     "value": "22"
+    },
+    {
+     "name": "FireRate",
+     "value": "800"
+    },
+    {
+     "name": "Range",
+     "value": "110"
+    },
+    {
+     "name": "MagazineSize",
+     "value": "30"
+    },
+    {
+     "name": "ReserveAmmo",
+     "value": "120"
+    },
+    {
+     "name": "ReloadTime",
+     "value": "2.1"
+    },
+    {
+     "name": "FireSound",
+     "value": "Assets/Audio/gun_pistol.vsndc"
+    },
+    {
+     "name": "MagChildName",
+     "value": ""
+    },
+    {
+     "name": "SightOffset",
+     "value": "0,0.112,0.056"
+    },
+    {
+     "name": "SupportHandOffset",
+     "value": "-0.065,-0.055,0.17"
+    },
+    {
+     "name": "MagWellOffset",
+     "value": "0,-0.06,0.05"
+    },
+    {
+     "name": "MuzzleOffset",
+     "value": "0,0.03,0.30"
+    },
+    {
+     "name": "EjectOffset",
+     "value": "0.02,0.05,0"
+    },
+    {
+     "name": "HipPosition",
+     "value": "0.12,-0.17,0.35"
+    },
+    {
+     "name": "KickUp",
+     "value": "34"
+    },
+    {
+     "name": "KickBack",
+     "value": "0.45"
+    },
+    {
+     "name": "HipSpread",
+     "value": "2.8"
+    },
+    {
+     "name": "CamKickPitch",
+     "value": "0.6"
+    }
+   ]
+  }
+ ],
+ "isFolder": false,
+ "prefabPath": null,
+ "isLockedToParent": false
 }

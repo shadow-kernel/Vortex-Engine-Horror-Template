@@ -1,0 +1,32 @@
+﻿{
+  "Name": "fp_arms",
+  "Version": "2.0",
+  "BaseColor": [
+    1,
+    1,
+    1,
+    1
+  ],
+  "Metallic": 0.0,
+  "Roughness": 0.88,
+  "AmbientOcclusion": 1,
+  "NormalStrength": 0.6,
+  "HeightScale": 0.0,
+  "AlphaCutoff": 0.5,
+  "UseDirectXNormals": true,
+  "EmissiveStrength": 0.0,
+  "TwoSided": false,
+  "BlendMode": "Opaque",
+  "CastShadows": false,
+  "ReceiveShadows": true,
+  "NormalTexture": "../Textures/dirty_concrete/dirty_concrete_nor_dx_2k.jpg",
+  "UVTiling": [
+    3,
+    3
+  ],
+  "UVOffset": [
+    0,
+    0
+  ],
+  "AlbedoTexture": "../Textures/gun/fp_arms.png"
+}

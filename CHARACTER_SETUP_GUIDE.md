@@ -60,8 +60,49 @@ aus einem exportierten Release ist das rausgestrippt.
 > das Zielen nach oben/unten macht die **Wirbelsäule**. Der `LocomotionController` erledigt das
 > automatisch (`FollowPlayer`=an, `FirstPerson`=aus): jeden Frame `SetWorldPose(FootPos, yaw-only)` +
 > additive Spine-Rotation aus `PlayerRig.AimPitch` (verteilt auf `SpineBones`).
-> Falls der Körper in die falsche Richtung lehnt: `SpineAimSign` auf `-1`. Ein Showcase-NPC (steht fest):
-> `FollowPlayer`=aus.
+> Falls der Körper in die falsche Richtung lehnt: `SpineAimSign` auf `-1`. Schaut der Körper von der
+> Blickrichtung WEG (Mixamo-Rigs stehen im Engine-Raum mit dem Gesicht nach −Z): `BodyYawOffset` (Default
+> `180`). Ein Showcase-NPC (steht fest): `FollowPlayer`=aus.
+
+
+## Blaupausen: nicht alles neu machen
+
+Im Template liegen zwei fertige Prefabs, die du in JEDE Szene (auch in eigenen Projekten — Ordner `Assets/Prefabs`
+rüberkopieren) ziehen kannst:
+
+| Prefab | Was drin ist | Wofür |
+|---|---|---|
+| `Assets/Prefabs/Player.ventity` | Kamera + `CoDMovement`, `Flashlight`, `Feet` (Schritte), `Interactor`, **`WCharakter`** (Third-Person-Körper: Animator, `LocomotionController`, Two-Bone-IK), **`FP_Arms`** (First-Person-Arme: Animator, `LocomotionController` FirstPerson=an, zwei Two-Bone-IK-Ketten, zwei `HandPose`-Komponenten, `fp_arms`-Material), **`Loadout`** (`WeaponLoadout` mit Vityaz + MP5) | Der komplette Spieler. In eine neue Szene ziehen, auf Augenhöhe (1.7 m über dem Boden) stellen — fertig. |
+| `Assets/Prefabs/Character_Soldier.ventity` | Skinned Soldat (`soldier.glb`) + Animator (alle Locomotion-Clips) + `LocomotionController` (FollowPlayer=aus → steht als NPC) + Two-Bone-IK + `HandPose` links/rechts | Blaupause für jeden weiteren Charakter/NPC: Prefab duplizieren, Mesh tauschen, fertig. |
+
+### Neuen Charakter in 5 Schritten (Mixamo-Rig)
+1. Modell (`.glb`/`.fbx`, Mixamo-Skelett `mixamorig:`) nach `Assets/Models/<Name>/` importieren; die Clips liegen als
+   `.vanim` daneben (der Importer extrahiert sie).
+2. `Character_Soldier.ventity` im Asset-Browser duplizieren → `Character_<Name>.ventity`, Instanz in die Szene ziehen.
+3. Bei den Kind-Entities `Meshes/*` im **MeshRenderer** den `Mesh Path` auf das neue Modell setzen (`…/<Name>.glb#submesh0`
+   usw.; ein Kind pro Submesh). Skalierung des Rigs bleibt `0.01` (Mixamo = cm).
+4. **Animator**: Clips zeigen auf `Assets/Models/<Name>/animations/…` — gleiche Clip-Namen behalten (`rifle_idle`,
+   `walk`, `run`, `aim`, `fire`, `rifle_reload`, …), dann muss am `LocomotionController` nichts geändert werden.
+5. Prüfen: **Two-Bone-IK** (Tip `mixamorig:LeftHand`, Target `mixamorig:RightHand`, Auto-Grip an) und die beiden
+   **`HandPose`** (Side Left/Right) — beide arbeiten mit Knochennamen, bei einem Mixamo-Rig also unverändert. Bei einem
+   fremden Rig: `BonePrefix`/`BoneFormat` bzw. Tip/Target anpassen.
+   Soll der Charakter der SPIELER sein: im `Player`-Prefab die Kinder `WCharakter` und `FP_Arms` durch das neue Prefab
+   ersetzen (FP_Arms bekommt `FirstPerson`=an, MeshRenderer-Layer 1, Material `fp_arms.vmat`).
+
+### HandPose — Finger im Inspector statt Code
+`Inspector ▸ Add Component ▸ Animation ▸ Hand Pose` auf dem Entity mit dem **Animator**. Felder:
+* **Hand** (Left/Right) — wählt die Knochen (`mixamorig:LeftHandIndex1` …).
+* **Index / Middle / Ring / Pinky / Thumb** — Beugung der drei Gelenke in Grad (x = Knöchel, y = Mittelgelenk, z = Endgelenk).
+  Faust ≈ 85/95/50, Abzugsfinger ≈ 25/40/20, offen = 0/0/0. **Spread** spreizt die Finger, **Weight** blendet die
+  ganze Pose (0 = nur Animation).
+* **Bone prefix / Bone format / Curl axis / Curl sign** — nur für fremde Rigs (Mixamo: `mixamorig:`, Achse X, Vorzeichen −1).
+Die Pose wirkt **additiv** auf jede Animation und ist sofort im Editor-Viewport sichtbar (Bind-Pose + Griff), im Spiel
+über alle Clips hinweg. Mehrere HandPose-Komponenten pro Entity sind erlaubt (eine je Hand). Per Script setzt man
+`Animation.SetBoneAdditiveRotation` — die Komponente ersetzt genau das für die Finger.
+
+### Waffe im Griff: Sockets am Waffen-Prefab
+Wo die Hände greifen, steht nicht im Code, sondern an der Waffe: Kind-Entities `Grip` (Waffenhand), `SupportGrip`
+(Stützhand), `Sight`, `Muzzle`, `Eject`, `MagWell` — im Viewport verschieben/drehen (→ `WEAPONS_GUIDE.md`).
 
 ## Teil 1 — Die Szenen-Struktur (genau so shipped `Demo.vscene`)
 
@@ -84,29 +125,53 @@ Player                  (Camera + CoDMovement — die Kamera ist das Player-Enti
    - Der Körper feuert/lädt automatisch synchron mit dir (das aktive Waffen-Script pulst `PlayerRig.Firing/Reloading`).
 4. **`TwoBoneIk`**-Komponente drauf (→ Abschnitt „Beide Hände an der Waffe").
 
-### FP_Arms (was DU siehst) — dasselbe Prefab, zweite Instanz
+### FP_Arms (was DU siehst) — dasselbe Prefab, zweite Instanz, PROZEDURAL (v2.8)
 1. **Dasselbe Charakter-Prefab NOCHMAL** in die Szene (Name `FP_Arms`), Scale wieder `0.01`.
    - Alle **MeshRenderer** → `renderLayer = 1` (First-Person/viewmodel).
 2. **Animator** + **`LocomotionController`** + **`TwoBoneIk`** wie beim WCharakter — nur:
-   **`FirstPerson` = AN**. Damit macht das Script automatisch:
-   - **Kamera-Lock am versteckten Kopf**: jeden Frame `SetWorldPose` relativ zum Auge —
-     `FpEyeHeight` (Default **1.58**) setzt das Rig so, dass die Kamera genau am Kopf sitzt;
-     Arme + Waffe lesen dadurch natürlich. `FpOffRight/-Up/-Fwd` trimmen das Bild
-     (Defaults `-0.06 / 0.05 / 0`), `FpPitchSign` dreht die Pitch-Richtung falls nötig.
-   - **Bones verstecken**: die `HideBones`-Liste (Default `Head`, `HeadTop_End`, `Neck`,
-     `LeftUpLeg`, `RightUpLeg`) wird einmalig per `SetBoneScaleOverride(bone, 0)` kollabiert →
-     nur Arme + Waffe im Bild, Hüfte/Wirbelsäule bleiben (liegen hinter dem Auge).
-   - **Geschulterte Clips**: FP spielt NIE die 3P-Low-Ready-Posen (die hängen die Arme unter die
-     Kamera), sondern `aim` im Stand/ADS und `rifle_run` in Bewegung — Waffe bleibt immer im Frame.
-   - **ADS**: Rechtsklick verschiebt das GANZE Rig weich, bis die Visierlinie in der Bildmitte
-     liegt — `AdsShiftRight/-Up/-Fwd` (Defaults `-0.095 / 0.10 / 0`), Tempo `AdsBlendSpeed`.
-     Pro Waffe/Visier im Inspector nachtunen.
+   **`FirstPerson` = AN**. Damit übernimmt der `ViewmodelRig`-Helfer (`Assets/Scripts/Player/ViewmodelRig.cs`)
+   das Rig komplett — **CoD-Style, ohne eigene First-Person-Animationen**:
+   - **Die Waffe bekommt jeden Frame eine Pose im KAMERA-Raum** (Hüfte / ADS / Sprint / Reload aus den
+     Viewmodel-Feldern des Waffen-Prefabs, dazu Look-Sway, Geh-Bob, Atmen, Rückstoß-Feder).
+   - **Schulter-Anker statt Animation**: die (versteckten) Schultern des Rigs werden jeden Frame auf einen festen
+     Punkt im Kamera-Raum gepinnt — `ViewmodelRig.ShoulderAnchor` (Default `(0, -0.21, -0.03)` m: unter und
+     leicht hinter dem Auge). Dadurch kommen die Oberarme immer von unten aus den Bildecken ins Bild und hängen
+     nie „in der Kamera". Reicht ein Griff nicht in Armlänge (`ReachFraction`, Default 0.96), rutscht das ganze
+     Rig zum Griff, statt einen Arm zu strecken.
+   - **Beide Hände per IK auf der Waffe**: die RECHTE Hand bekommt Position **und** Rotation des Griffs
+     (Waffe = Hand × Griff ⇒ Hand = Waffe × Griff⁻¹; die Waffe hängt per Bone-Attach an der Hand → Arme + Waffe
+     bewegen sich als Einheit), die LINKE Hand wird auf den Vordergriff gezogen (`Animation.SetIkTarget`) und
+     läuft beim Nachladen den Magazin-Pfad ab (greifen, ziehen, fallen lassen, einsetzen, draufschlagen).
+     Dafür braucht `FP_Arms` **ZWEI `TwoBoneIk`-Komponenten**: Tip `mixamorig:LeftHand` (Target
+     `mixamorig:RightHand`, AutoGrip an) und Tip `mixamorig:RightHand` (Target = derselbe Knochen, AutoGrip
+     aus, `ApplyTipRotation` an).
+   - **Ellbogen aus dem Bild drehen**: `ElbowPole` (Stützarm, Default 50°), `AdsElbowPole` (beim Zielen, 45°) und
+     `ElbowPoleRight` (Waffenarm, 40°) drehen die Ellbogen um die Achse Schulter→Hand nach unten/außen.
+   - **Torso, Schultern, Hals/Kopf und Beine werden ausgeblendet** (`Animation.SetBoneHidden`): `HideBones`
+     (ganze Teilbäume: Neck, LeftUpLeg, RightUpLeg) + `HideBonesSelf` (nur der Knochen selbst, Kinder bleiben:
+     Hips, Spine, Spine1, Spine2, LeftShoulder, RightShoulder) → es rendern nur die Arme + die Waffe.
+   - **Arm-Optik**: dem Arm-Mesh (`FP_Arms/Meshes/Beta_Surface`) ist das Material `Assets/Materials/fp_arms.vmat`
+     zugewiesen (dunkler Stoff) — importierte Modelle ignorieren die Entity-Farbe, ein `.vmat` am MeshRenderer
+     ist der saubere Weg für Handschuhe/Ärmel. `FpRigScale` (Default `0.8`) skaliert das Rig (Armlänge vs.
+     Waffenabstand); `HideMeshChildren` blendet Hilfs-Meshes des Rigs aus (`Beta_Joints`).
+   - Es läuft nur EIN Haltungs-Clip (`FpHoldClip` = `aim`) für Finger-/Ellbogenpose; Feuern/Nachladen sind
+     prozedural. Die Felder `FpEyeHeight/FpOff*/AdsShift*` aus v2.7 gibt es nicht mehr — die Posen stehen
+     jetzt **am Waffen-Prefab** (→ `WEAPONS_GUIDE.md`, Abschnitt „Viewmodel-Felder“).
+
+> **Live-Tuning beim Entwickeln** (nur Umgebungsvariablen, nichts wird gespeichert): `VM_HIP="x,y,z,pitch,yaw,roll"`,
+> `VM_SPRINT=...`, `VM_RELOAD="sx,sy,sz,pitch,yaw,roll"`, `VM_SUPPORT="x,y,z"`, `VM_ADS=Distanz`, `VM_FOV=Grad`,
+> `VM_ANCHOR="x,y,z"`, `VM_RIGPITCH=Grad`, `VM_REACH=0..1`, `VM_POLE=Grad`, `VM_POLE_ADS=Grad`, `VM_POLE_R=Grad`,
+> `VM_SCALE=Faktor`, `VM_CLIP=aim`, `VM_DEBUG=1` (loggt Posen, Reichweiten und Gelenkpositionen im Kamera-Raum).
+> Werte, die passen, dann in die Prefab-/Script-Felder übernehmen.
+> Skriptbar testen: `Vortex.Player --project=<Pfad> --scene=Yard --input=script.txt --capture-dir=<Ordner>`
+> (Zeilen wie `2.0 capture idle.bmp`, `2.5 hold LButton 0.4`, `3.5 tap R`, `7.0 press RButton`).
 
 ### Loadout (EIN Waffen-Objekt)
 Leeres Kind-Entity `Loadout` + **`WeaponLoadout`**-Script. Es spawnt jedes Waffen-Prefab aus der
 `Weapon Prefabs`-Liste **ZWEIMAL** und klebt beide Kopien per `Animation.Attach` an den
 `mixamorig:RightHand`-Bone: die **FP-Instanz** (Layer 1) an die Hand von `FP_Arms` (ihr
-Weapon-Script ist das aktive — Input + Ammo), die **3P-Instanz** (Layer 2) an die Hand von
+Weapon-Script ist das aktive — Input + Ammo; ihre Viewmodel-Felder steuern den `ViewmodelRig`
+über `PlayerRig.ActiveWeapon`), die **3P-Instanz** (Layer 2) an die Hand von
 `WCharakter`. Der Sitz kommt aus `GripOffset`/`GripRotation` am Waffen-Prefab.
 **Alles Weitere — Klassen, neue Waffe anlegen, Wechseln per Taste/Code, sichtbarer Mag-Zug —
 steht in `WEAPONS_GUIDE.md`.**
@@ -143,6 +208,15 @@ verdrahtet):
 
 Weil FP_Arms und WCharakter identisch verdrahtet sind, greift die Stützhand in BEIDEN Ansichten —
 mit der **P-Debug-Cam + CAPS** von vorne prüfen.
+
+**First-Person-Zusatz (FP_Arms)**: dort gibt es eine **zweite** `TwoBoneIk`-Komponente mit Tip **UND** Target
+`mixamorig:RightHand` (AutoGrip aus, ApplyTipRotation an). Der `ViewmodelRig` setzt jeden Frame Welt-Ziele für
+beide Ketten: die Waffenhand bekommt den **Auto-Grip** (Griff-Sitz aus der Handgeometrie + `GripHandPos`/
+`GripFingerDir`/`GripPalmDir` des Waffen-Prefabs, gilt danach auch für die 3P-Kopie), die Stützhand wird mit
+`SupportHandOffset`/`SupportFingerDir`/`SupportPalmDir` (oder die Sockets `Grip`/`SupportGrip` am Waffen-Prefab)
+unter den Handschutz gedreht; die Finger beider Hände schließen sich über **`HandPose`-Komponenten** auf dem Rig
+(pro Hand eine, Beugung pro Fingergelenk im Inspector, → `WEAPONS_GUIDE.md`). Von außen prüfen:
+`VM_DBGCAM="x,y,z,yaw,pitch" VM_DBGCAM_FP=1` rendert die FP-Arme + Waffe aus einer freien Kamera.
 
 ---
 

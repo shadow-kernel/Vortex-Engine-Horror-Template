@@ -1,4 +1,4 @@
-{
+﻿{
  "id": "a7b8c9d0-1122-4334-9556-77e8f9a0b101",
  "name": "Weapon_Vityaz",
  "isActive": true,
@@ -44,15 +44,378 @@
      "castShadows": true,
      "receiveShadows": true,
      "renderLayer": 0,
-     "colorR": 0.22,
-     "colorG": 0.23,
-     "colorB": 0.25,
+     "colorR": 0.8,
+     "colorG": 0.8,
+     "colorB": 0.8,
      "colorA": 1,
      "metallic": 0.55,
      "roughness": 0.42,
      "normalStrength": 1,
      "texturePath": null,
      "shaderPath": null
+    }
+   ],
+   "isFolder": false,
+   "prefabPath": null,
+   "isLockedToParent": true
+  },
+  {
+   "id": "c55381f4-723b-47d3-8a95-84114026a197",
+   "name": "MuzzleFlash",
+   "isActive": true,
+   "isStatic": false,
+   "layer": 0,
+   "tag": "Untagged",
+   "children": [],
+   "components": [
+    {
+     "__type": "Transform",
+     "id": "f676f814-f24c-4936-b051-f8cc4a9a7721",
+     "isEnabled": true,
+     "localPosition": {
+      "x": 0,
+      "y": 0.055,
+      "z": 0.31
+     },
+     "localRotation": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+     },
+     "localScale": {
+      "x": 1,
+      "y": 1,
+      "z": 1
+     }
+    },
+    {
+     "__type": "Light",
+     "id": "5473c474-864a-483d-85c3-716b49af51f7",
+     "isEnabled": true,
+     "lightType": 1,
+     "shadowType": 0,
+     "intensity": 0,
+     "range": 3.5,
+     "spotAngle": 30,
+     "innerSpotAngle": 21,
+     "colorR": 1,
+     "colorG": 0.72,
+     "colorB": 0.42,
+     "shadowStrength": 1,
+     "shadowBias": 0.05,
+     "shadowNormalBias": 0.4,
+     "shadowResolution": 2048,
+     "cullingMask": -1
+    }
+   ],
+   "isFolder": false,
+   "prefabPath": null,
+   "isLockedToParent": false
+  },
+  {
+   "id": "e943bed8-b279-4be9-ad22-20eb328536be",
+   "name": "Flash",
+   "isActive": false,
+   "isStatic": false,
+   "layer": 0,
+   "tag": "Untagged",
+   "children": [],
+   "components": [
+    {
+     "__type": "Transform",
+     "id": "7fd5d430-8bc2-40a0-b959-79a1b64158a8",
+     "isEnabled": true,
+     "localPosition": {
+      "x": 0,
+      "y": 0.055,
+      "z": 0.34
+     },
+     "localRotation": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+     },
+     "localScale": {
+      "x": 0.05,
+      "y": 0.05,
+      "z": 0.1
+     }
+    },
+    {
+     "__type": "MeshRenderer",
+     "id": "eca0f1e8-6d45-4e79-96e7-7c067395904a",
+     "isEnabled": true,
+     "meshPath": "Primitive:Sphere",
+     "materialPath": "Assets/Materials/generator_glow.vmat",
+     "castShadows": false,
+     "receiveShadows": false,
+     "renderLayer": 0,
+     "colorR": 0.7,
+     "colorG": 0.7,
+     "colorB": 0.7,
+     "colorA": 1,
+     "metallic": 0,
+     "roughness": 0.5,
+     "normalStrength": 1,
+     "texturePath": null,
+     "shaderPath": null
+    }
+   ],
+   "isFolder": false,
+   "prefabPath": null,
+   "isLockedToParent": false
+  },
+  {
+   "id": "008c91f5-d16c-4de3-9533-815713c0777b",
+   "name": "ViewLight",
+   "isActive": true,
+   "isStatic": false,
+   "layer": 0,
+   "tag": "Untagged",
+   "children": [],
+   "components": [
+    {
+     "__type": "Transform",
+     "id": "96057d44-30c0-40ee-85a1-a1e65472946a",
+     "isEnabled": true,
+     "localPosition": {
+      "x": 0.0,
+      "y": 0.09,
+      "z": 0.02
+     },
+     "localRotation": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+     },
+     "localScale": {
+      "x": 1,
+      "y": 1,
+      "z": 1
+     }
+    },
+    {
+     "__type": "Light",
+     "id": "4471d3d7-143a-4669-b11d-4b8408ecc32f",
+     "isEnabled": true,
+     "lightType": 1,
+     "shadowType": 0,
+     "intensity": 2.2,
+     "range": 1.4,
+     "spotAngle": 30,
+     "innerSpotAngle": 21,
+     "colorR": 1.0,
+     "colorG": 0.96,
+     "colorB": 0.9,
+     "shadowStrength": 1,
+     "shadowBias": 0.05,
+     "shadowNormalBias": 0.4,
+     "shadowResolution": 2048,
+     "cullingMask": -1
+    }
+   ],
+   "isFolder": false,
+   "prefabPath": null,
+   "isLockedToParent": false
+  },
+  {
+   "id": "7c78f439-c2b8-4e71-bca5-c17b70d66b31",
+   "name": "Grip",
+   "isActive": true,
+   "isStatic": false,
+   "layer": 0,
+   "tag": "Untagged",
+   "children": [],
+   "components": [
+    {
+     "__type": "Transform",
+     "id": "f568ec8b-e91c-4430-8009-ba087d25a020",
+     "isEnabled": true,
+     "localPosition": {
+      "x": 0.02,
+      "y": -0.055,
+      "z": -0.04
+     },
+     "localRotation": {
+      "x": -11.296,
+      "y": 2.862,
+      "z": 91.114
+     },
+     "localScale": {
+      "x": 1,
+      "y": 1,
+      "z": 1
+     }
+    }
+   ],
+   "isFolder": false,
+   "prefabPath": null,
+   "isLockedToParent": true
+  },
+  {
+   "id": "8a3b0226-fcb4-4f39-856d-5b2ccd24a1ae",
+   "name": "SupportGrip",
+   "isActive": true,
+   "isStatic": false,
+   "layer": 0,
+   "tag": "Untagged",
+   "children": [],
+   "components": [
+    {
+     "__type": "Transform",
+     "id": "49add43e-cfbc-4c25-949d-5b67f4124b9d",
+     "isEnabled": true,
+     "localPosition": {
+      "x": -0.065,
+      "y": -0.045,
+      "z": 0.17
+     },
+     "localRotation": {
+      "x": -8.531,
+      "y": 90.0,
+      "z": 0.0
+     },
+     "localScale": {
+      "x": 1,
+      "y": 1,
+      "z": 1
+     }
+    }
+   ],
+   "isFolder": false,
+   "prefabPath": null,
+   "isLockedToParent": true
+  },
+  {
+   "id": "aee4d90d-7dd2-469a-babf-05ce7cf46b49",
+   "name": "Sight",
+   "isActive": true,
+   "isStatic": false,
+   "layer": 0,
+   "tag": "Untagged",
+   "children": [],
+   "components": [
+    {
+     "__type": "Transform",
+     "id": "c0311f57-9930-4a2c-9399-a8039d617626",
+     "isEnabled": true,
+     "localPosition": {
+      "x": 0.002,
+      "y": 0.128,
+      "z": 0.02
+     },
+     "localRotation": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+     },
+     "localScale": {
+      "x": 1,
+      "y": 1,
+      "z": 1
+     }
+    }
+   ],
+   "isFolder": false,
+   "prefabPath": null,
+   "isLockedToParent": true
+  },
+  {
+   "id": "f9b62610-e371-48e4-b361-7ac06a4f47f6",
+   "name": "Muzzle",
+   "isActive": true,
+   "isStatic": false,
+   "layer": 0,
+   "tag": "Untagged",
+   "children": [],
+   "components": [
+    {
+     "__type": "Transform",
+     "id": "cb7a7c2d-bee8-4299-b28a-e23a595631e4",
+     "isEnabled": true,
+     "localPosition": {
+      "x": 0,
+      "y": 0.055,
+      "z": 0.31
+     },
+     "localRotation": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+     },
+     "localScale": {
+      "x": 1,
+      "y": 1,
+      "z": 1
+     }
+    }
+   ],
+   "isFolder": false,
+   "prefabPath": null,
+   "isLockedToParent": true
+  },
+  {
+   "id": "b31b7df9-1a75-4af3-b997-1ae552482566",
+   "name": "Eject",
+   "isActive": true,
+   "isStatic": false,
+   "layer": 0,
+   "tag": "Untagged",
+   "children": [],
+   "components": [
+    {
+     "__type": "Transform",
+     "id": "1174a281-d32b-4840-8a73-eb431a3c2413",
+     "isEnabled": true,
+     "localPosition": {
+      "x": 0.025,
+      "y": 0.07,
+      "z": 0.04
+     },
+     "localRotation": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+     },
+     "localScale": {
+      "x": 1,
+      "y": 1,
+      "z": 1
+     }
+    }
+   ],
+   "isFolder": false,
+   "prefabPath": null,
+   "isLockedToParent": true
+  },
+  {
+   "id": "298d78d8-88d4-447a-8d82-c560f81d5fb9",
+   "name": "MagWell",
+   "isActive": true,
+   "isStatic": false,
+   "layer": 0,
+   "tag": "Untagged",
+   "children": [],
+   "components": [
+    {
+     "__type": "Transform",
+     "id": "01f654f2-f727-48d0-b466-80331402529a",
+     "isEnabled": true,
+     "localPosition": {
+      "x": 0,
+      "y": -0.005,
+      "z": 0.1
+     },
+     "localRotation": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+     },
+     "localScale": {
+      "x": 1,
+      "y": 1,
+      "z": 1
+     }
     }
    ],
    "isFolder": false,
@@ -90,12 +453,12 @@
    "castShadows": true,
    "receiveShadows": true,
    "renderLayer": 0,
-   "colorR": 0.25,
-   "colorG": 0.26,
-   "colorB": 0.28,
+   "colorR": 0.85,
+   "colorG": 0.85,
+   "colorB": 0.85,
    "colorA": 1,
-   "metallic": 0.5,
-   "roughness": 0.4,
+   "metallic": 0.55,
+   "roughness": 0.45,
    "normalStrength": 1,
    "texturePath": null,
    "shaderPath": null

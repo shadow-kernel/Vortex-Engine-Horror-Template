@@ -21,14 +21,37 @@ public class HudManager : VortexBehaviour
         DrawReticle(W, H);
     }
 
-    // ADS reticle: the hitscan leaves the EXACT screen centre, so this dot IS the point of impact —
-    // it reads as the holo's projected dot when the sight is centred (accurate by construction).
+    // Reticle. ADS: the hitscan's centre leaves the EXACT screen centre, so the red dot IS the point of impact.
+    // Hip: a dynamic four-line crosshair whose gap mirrors the weapon's current cone (movement + sustained fire
+    // widen it), hidden while sprinting or swapping weapons like in CoD. Plus the hit marker (X) on a hit.
     private void DrawReticle(float W, float H)
     {
-        if (!PlayerRig.Ads) return;
         float cx = W * 0.5f, cy = H * 0.5f;
-        UI.Rect(cx - 2.5f, cy - 2.5f, 5f, 5f, Color.Rgba(255, 60, 40, 235), 2.5f);   // red holo dot
-        UI.Rect(cx - 1f, cy - 1f, 2f, 2f, Color.Rgba(255, 200, 190, 255), 1f);       // hot core
+        if (PlayerRig.HitMarkerT > 0f)
+        {
+            PlayerRig.HitMarkerT -= Time.DeltaTime;
+            Color mc = PlayerRig.HitMarkerKill ? Color.Rgba(255, 70, 60, 240) : Color.Rgba(255, 255, 255, 235);
+            for (int arm = 0; arm < 4; arm++)
+            {
+                float sx = (arm & 1) == 0 ? -1f : 1f, sy = (arm & 2) == 0 ? -1f : 1f;
+                for (int k = 0; k < 4; k++) { float d = 7f + k * 3f; UI.Rect(cx + sx * d - 1.5f, cy + sy * d - 1.5f, 3f, 3f, mc); }
+            }
+        }
+        if (PlayerRig.Ads)
+        {
+            UI.Rect(cx - 2.5f, cy - 2.5f, 5f, 5f, Color.Rgba(255, 60, 40, 235), 2.5f);   // red holo dot
+            UI.Rect(cx - 1f, cy - 1f, 2f, 2f, Color.Rgba(255, 200, 190, 255), 1f);       // hot core
+            return;
+        }
+        if (PlayerRig.IsSprinting || PlayerRig.Switching || PlayerRig.Reloading) return;
+        float gap = 6f + PlayerRig.CurrentSpread * (H / 90f);   // degrees -> pixels at the current resolution
+        float len = 9f, th = 2f;
+        Color line = Color.Rgba(240, 240, 240, 215), shadow = Color.Rgba(0, 0, 0, 120);
+        UI.Rect(cx - gap - len - 1f, cy - th / 2f - 1f, len + 2f, th + 2f, shadow); UI.Rect(cx - gap - len, cy - th / 2f, len, th, line);
+        UI.Rect(cx + gap - 1f, cy - th / 2f - 1f, len + 2f, th + 2f, shadow);       UI.Rect(cx + gap, cy - th / 2f, len, th, line);
+        UI.Rect(cx - th / 2f - 1f, cy - gap - len - 1f, th + 2f, len + 2f, shadow); UI.Rect(cx - th / 2f, cy - gap - len, th, len, line);
+        UI.Rect(cx - th / 2f - 1f, cy + gap - 1f, th + 2f, len + 2f, shadow);       UI.Rect(cx - th / 2f, cy + gap, th, len, line);
+        UI.Rect(cx - 1f, cy - 1f, 2f, 2f, Color.Rgba(240, 240, 240, 180));            // centre dot
     }
 
     // Ammo panel bottom-right: big mag count + magazine size, red pulse when empty, amber when low.

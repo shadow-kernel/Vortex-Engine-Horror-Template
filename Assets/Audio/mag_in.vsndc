@@ -1,0 +1,18 @@
+{
+  "entries": [
+    {
+      "guid": "",
+      "clipPath": "Assets/Audio/mag_in_1.wav",
+      "weight": 1
+    },
+    {
+      "guid": "",
+      "clipPath": "Assets/Audio/mag_in_2.wav",
+      "weight": 1
+    }
+  ],
+  "pitchMin": 0.95,
+  "pitchMax": 1.05,
+  "volumeMin": 0.9,
+  "volumeMax": 1.0
+}
