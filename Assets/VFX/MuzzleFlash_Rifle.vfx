@@ -1,0 +1,715 @@
+{
+  "name": "MuzzleFlash_Rifle",
+  "version": 1,
+  "emitters": [
+    {
+      "name": "Flash core",
+      "enabled": true,
+      "maxParticles": 256,
+      "duration": 0.1,
+      "looping": false,
+      "prewarm": false,
+      "startDelay": 0,
+      "simulationSpace": "local",
+      "simulationSpeed": 1,
+      "seed": 0,
+      "rate": 0,
+      "rateOverDistance": 0,
+      "bursts": [
+        {
+          "time": 0,
+          "count": 1,
+          "countMax": 1,
+          "cycles": 1,
+          "interval": 0.1,
+          "probability": 1
+        }
+      ],
+      "lifetime": [
+        0.03,
+        0.045
+      ],
+      "speed": [
+        0,
+        0
+      ],
+      "size": [
+        0.16,
+        0.26
+      ],
+      "rotation": [
+        0,
+        360
+      ],
+      "rotationSpeed": [
+        0,
+        0
+      ],
+      "color": [
+        1,
+        0.82,
+        0.5,
+        1
+      ],
+      "color2": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "gravity": 0,
+      "drag": 0,
+      "inheritVelocity": 0,
+      "shape": {
+        "type": "point",
+        "emitFrom": "volume",
+        "radius": 0.1,
+        "radiusThickness": 1,
+        "angle": 25,
+        "arc": 360,
+        "length": 1,
+        "box": [
+          1,
+          1,
+          1
+        ],
+        "offset": [
+          0,
+          0,
+          0
+        ],
+        "rotation": [
+          0,
+          0,
+          0
+        ],
+        "randomDirection": 0
+      },
+      "velocity": [
+        0,
+        0,
+        0
+      ],
+      "velocitySpace": "world",
+      "velocityCurve": {
+        "keys": []
+      },
+      "speedCurve": {
+        "keys": []
+      },
+      "sizeCurve": {
+        "keys": [
+          {
+            "t": 0,
+            "v": 0.7
+          },
+          {
+            "t": 1,
+            "v": 1.15
+          }
+        ]
+      },
+      "colorGradient": {
+        "keys": [
+          {
+            "t": 0,
+            "r": 1,
+            "g": 1,
+            "b": 1,
+            "a": 1
+          },
+          {
+            "t": 1,
+            "r": 1,
+            "g": 0.55,
+            "b": 0.25,
+            "a": 0
+          }
+        ]
+      },
+      "noise": {
+        "strength": 0,
+        "frequency": 1,
+        "scrollSpeed": 0,
+        "octaves": 1
+      },
+      "flipbook": {
+        "tilesX": 1,
+        "tilesY": 1,
+        "mode": "lifetime",
+        "cycles": 1,
+        "fps": 15,
+        "startFrame": [
+          0,
+          0
+        ],
+        "blend": false
+      },
+      "render": {
+        "mode": "billboard",
+        "blend": "additive",
+        "texture": "Textures/flare.png",
+        "lit": false,
+        "softDistance": 0,
+        "lengthScale": 2,
+        "velocityScale": 0,
+        "sort": "auto",
+        "emissive": 7,
+        "aspect": 1
+      },
+      "collision": {
+        "enabled": false,
+        "mode": "bounce",
+        "bounce": 0.4,
+        "dampen": 0.2,
+        "lifetimeLoss": 0,
+        "radius": 0.02,
+        "thickness": 0.5
+      },
+      "trails": {
+        "enabled": false,
+        "lifetime": 0.3,
+        "minDistance": 0.05,
+        "maxPoints": 16,
+        "width": 1,
+        "widthCurve": {
+          "keys": []
+        },
+        "colorGradient": {
+          "keys": []
+        },
+        "inheritColor": true,
+        "textureMode": "stretch"
+      }
+    },
+    {
+      "name": "Flash streak",
+      "enabled": true,
+      "maxParticles": 256,
+      "duration": 0.1,
+      "looping": false,
+      "prewarm": false,
+      "startDelay": 0,
+      "simulationSpace": "local",
+      "simulationSpeed": 1,
+      "seed": 0,
+      "rate": 0,
+      "rateOverDistance": 0,
+      "bursts": [
+        {
+          "time": 0,
+          "count": 2,
+          "countMax": 3,
+          "cycles": 1,
+          "interval": 0.1,
+          "probability": 1
+        }
+      ],
+      "lifetime": [
+        0.025,
+        0.04
+      ],
+      "speed": [
+        0.6,
+        1.4
+      ],
+      "size": [
+        0.045,
+        0.07
+      ],
+      "rotation": [
+        0,
+        0
+      ],
+      "rotationSpeed": [
+        0,
+        0
+      ],
+      "color": [
+        1,
+        0.78,
+        0.45,
+        1
+      ],
+      "color2": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "gravity": 0,
+      "drag": 0,
+      "inheritVelocity": 0,
+      "shape": {
+        "type": "cone",
+        "emitFrom": "volume",
+        "radius": 0,
+        "radiusThickness": 1,
+        "angle": 5,
+        "arc": 360,
+        "length": 1,
+        "box": [
+          1,
+          1,
+          1
+        ],
+        "offset": [
+          0,
+          0,
+          0
+        ],
+        "rotation": [
+          0,
+          0,
+          0
+        ],
+        "randomDirection": 0
+      },
+      "velocity": [
+        0,
+        0,
+        0
+      ],
+      "velocitySpace": "world",
+      "velocityCurve": {
+        "keys": []
+      },
+      "speedCurve": {
+        "keys": []
+      },
+      "sizeCurve": {
+        "keys": []
+      },
+      "colorGradient": {
+        "keys": [
+          {
+            "t": 0,
+            "r": 1,
+            "g": 1,
+            "b": 1,
+            "a": 1
+          },
+          {
+            "t": 1,
+            "r": 1,
+            "g": 0.6,
+            "b": 0.3,
+            "a": 0
+          }
+        ]
+      },
+      "noise": {
+        "strength": 0,
+        "frequency": 1,
+        "scrollSpeed": 0,
+        "octaves": 1
+      },
+      "flipbook": {
+        "tilesX": 1,
+        "tilesY": 1,
+        "mode": "lifetime",
+        "cycles": 1,
+        "fps": 15,
+        "startFrame": [
+          0,
+          0
+        ],
+        "blend": false
+      },
+      "render": {
+        "mode": "stretched",
+        "blend": "additive",
+        "texture": "Textures/spark.png",
+        "lit": false,
+        "softDistance": 0,
+        "lengthScale": 7,
+        "velocityScale": 0,
+        "sort": "auto",
+        "emissive": 6,
+        "aspect": 1
+      },
+      "collision": {
+        "enabled": false,
+        "mode": "bounce",
+        "bounce": 0.4,
+        "dampen": 0.2,
+        "lifetimeLoss": 0,
+        "radius": 0.02,
+        "thickness": 0.5
+      },
+      "trails": {
+        "enabled": false,
+        "lifetime": 0.3,
+        "minDistance": 0.05,
+        "maxPoints": 16,
+        "width": 1,
+        "widthCurve": {
+          "keys": []
+        },
+        "colorGradient": {
+          "keys": []
+        },
+        "inheritColor": true,
+        "textureMode": "stretch"
+      }
+    },
+    {
+      "name": "Sparks",
+      "enabled": true,
+      "maxParticles": 256,
+      "duration": 0.3,
+      "looping": false,
+      "prewarm": false,
+      "startDelay": 0,
+      "simulationSpace": "world",
+      "simulationSpeed": 1,
+      "seed": 0,
+      "rate": 0,
+      "rateOverDistance": 0,
+      "bursts": [
+        {
+          "time": 0,
+          "count": 3,
+          "countMax": 7,
+          "cycles": 1,
+          "interval": 0.1,
+          "probability": 1
+        }
+      ],
+      "lifetime": [
+        0.05,
+        0.12
+      ],
+      "speed": [
+        9,
+        20
+      ],
+      "size": [
+        0.006,
+        0.012
+      ],
+      "rotation": [
+        0,
+        0
+      ],
+      "rotationSpeed": [
+        0,
+        0
+      ],
+      "color": [
+        1,
+        0.72,
+        0.38,
+        1
+      ],
+      "color2": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "gravity": 0.4,
+      "drag": 1.5,
+      "inheritVelocity": 0,
+      "shape": {
+        "type": "cone",
+        "emitFrom": "volume",
+        "radius": 0,
+        "radiusThickness": 1,
+        "angle": 12,
+        "arc": 360,
+        "length": 1,
+        "box": [
+          1,
+          1,
+          1
+        ],
+        "offset": [
+          0,
+          0,
+          0
+        ],
+        "rotation": [
+          0,
+          0,
+          0
+        ],
+        "randomDirection": 0
+      },
+      "velocity": [
+        0,
+        0,
+        0
+      ],
+      "velocitySpace": "world",
+      "velocityCurve": {
+        "keys": []
+      },
+      "speedCurve": {
+        "keys": []
+      },
+      "sizeCurve": {
+        "keys": []
+      },
+      "colorGradient": {
+        "keys": [
+          {
+            "t": 0,
+            "r": 1,
+            "g": 1,
+            "b": 1,
+            "a": 1
+          },
+          {
+            "t": 1,
+            "r": 1,
+            "g": 0.5,
+            "b": 0.2,
+            "a": 0
+          }
+        ]
+      },
+      "noise": {
+        "strength": 0,
+        "frequency": 1,
+        "scrollSpeed": 0,
+        "octaves": 1
+      },
+      "flipbook": {
+        "tilesX": 1,
+        "tilesY": 1,
+        "mode": "lifetime",
+        "cycles": 1,
+        "fps": 15,
+        "startFrame": [
+          0,
+          0
+        ],
+        "blend": false
+      },
+      "render": {
+        "mode": "stretched",
+        "blend": "additive",
+        "texture": "Textures/spark.png",
+        "lit": false,
+        "softDistance": 0,
+        "lengthScale": 2.5,
+        "velocityScale": 0.012,
+        "sort": "auto",
+        "emissive": 5,
+        "aspect": 1
+      },
+      "collision": {
+        "enabled": false,
+        "mode": "bounce",
+        "bounce": 0.4,
+        "dampen": 0.2,
+        "lifetimeLoss": 0,
+        "radius": 0.02,
+        "thickness": 0.5
+      },
+      "trails": {
+        "enabled": false,
+        "lifetime": 0.3,
+        "minDistance": 0.05,
+        "maxPoints": 16,
+        "width": 1,
+        "widthCurve": {
+          "keys": []
+        },
+        "colorGradient": {
+          "keys": []
+        },
+        "inheritColor": true,
+        "textureMode": "stretch"
+      }
+    },
+    {
+      "name": "Smoke",
+      "enabled": true,
+      "maxParticles": 256,
+      "duration": 1.2,
+      "looping": false,
+      "prewarm": false,
+      "startDelay": 0,
+      "simulationSpace": "world",
+      "simulationSpeed": 1,
+      "seed": 0,
+      "rate": 0,
+      "rateOverDistance": 0,
+      "bursts": [
+        {
+          "time": 0,
+          "count": 1,
+          "countMax": 3,
+          "cycles": 1,
+          "interval": 0.1,
+          "probability": 1
+        }
+      ],
+      "lifetime": [
+        0.45,
+        0.9
+      ],
+      "speed": [
+        0.3,
+        1.1
+      ],
+      "size": [
+        0.04,
+        0.08
+      ],
+      "rotation": [
+        0,
+        360
+      ],
+      "rotationSpeed": [
+        -40,
+        40
+      ],
+      "color": [
+        0.78,
+        0.78,
+        0.78,
+        1
+      ],
+      "color2": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "gravity": -0.03,
+      "drag": 3,
+      "inheritVelocity": 0,
+      "shape": {
+        "type": "cone",
+        "emitFrom": "volume",
+        "radius": 0,
+        "radiusThickness": 1,
+        "angle": 16,
+        "arc": 360,
+        "length": 1,
+        "box": [
+          1,
+          1,
+          1
+        ],
+        "offset": [
+          0,
+          0,
+          0
+        ],
+        "rotation": [
+          0,
+          0,
+          0
+        ],
+        "randomDirection": 0
+      },
+      "velocity": [
+        0,
+        0,
+        0
+      ],
+      "velocitySpace": "world",
+      "velocityCurve": {
+        "keys": []
+      },
+      "speedCurve": {
+        "keys": []
+      },
+      "sizeCurve": {
+        "keys": [
+          {
+            "t": 0,
+            "v": 0.6
+          },
+          {
+            "t": 1,
+            "v": 4.5
+          }
+        ]
+      },
+      "colorGradient": {
+        "keys": [
+          {
+            "t": 0,
+            "r": 1,
+            "g": 1,
+            "b": 1,
+            "a": 0
+          },
+          {
+            "t": 0.12,
+            "r": 1,
+            "g": 1,
+            "b": 1,
+            "a": 0.2
+          },
+          {
+            "t": 1,
+            "r": 1,
+            "g": 1,
+            "b": 1,
+            "a": 0
+          }
+        ]
+      },
+      "noise": {
+        "strength": 0.25,
+        "frequency": 1.6,
+        "scrollSpeed": 0.4,
+        "octaves": 1
+      },
+      "flipbook": {
+        "tilesX": 2,
+        "tilesY": 2,
+        "mode": "random",
+        "cycles": 1,
+        "fps": 15,
+        "startFrame": [
+          0,
+          0
+        ],
+        "blend": false
+      },
+      "render": {
+        "mode": "billboard",
+        "blend": "alpha",
+        "texture": "Textures/smoke_puff.png",
+        "lit": true,
+        "softDistance": 0.1,
+        "lengthScale": 2,
+        "velocityScale": 0,
+        "sort": "auto",
+        "emissive": 1,
+        "aspect": 1
+      },
+      "collision": {
+        "enabled": false,
+        "mode": "bounce",
+        "bounce": 0.4,
+        "dampen": 0.2,
+        "lifetimeLoss": 0,
+        "radius": 0.02,
+        "thickness": 0.5
+      },
+      "trails": {
+        "enabled": false,
+        "lifetime": 0.3,
+        "minDistance": 0.05,
+        "maxPoints": 16,
+        "width": 1,
+        "widthCurve": {
+          "keys": []
+        },
+        "colorGradient": {
+          "keys": []
+        },
+        "inheritColor": true,
+        "textureMode": "stretch"
+      }
+    }
+  ]
+}

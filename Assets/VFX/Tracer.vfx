@@ -1,0 +1,48 @@
+{
+  "name": "Tracer",
+  "version": 1,
+  "emitters": [],
+  "beam": {
+    "width": 0.016,
+    "widthCurve": {
+      "keys": [
+        {
+          "t": 0,
+          "v": 0.4
+        },
+        {
+          "t": 0.8,
+          "v": 1
+        },
+        {
+          "t": 1,
+          "v": 1
+        }
+      ]
+    },
+    "colorGradient": {
+      "keys": []
+    },
+    "color": [
+      1,
+      0.82,
+      0.5,
+      1
+    ],
+    "texture": "Textures/tracer.png",
+    "blend": "additive",
+    "emissive": 9,
+    "uvTiling": 0,
+    "uvScroll": 0,
+    "segments": 1,
+    "noise": 0,
+    "noiseFrequency": 1,
+    "noiseSpeed": 5,
+    "duration": 0.5,
+    "fadeIn": 0,
+    "fadeOut": 0.03,
+    "speed": 380,
+    "length": 4.5,
+    "softDistance": 0
+  }
+}

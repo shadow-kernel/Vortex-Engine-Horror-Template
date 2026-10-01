@@ -1,0 +1,182 @@
+{
+  "name": "Dust_Motes",
+  "version": 1,
+  "emitters": [
+    {
+      "name": "Dust motes",
+      "enabled": true,
+      "maxParticles": 220,
+      "duration": 5,
+      "looping": true,
+      "prewarm": true,
+      "startDelay": 0,
+      "simulationSpace": "world",
+      "simulationSpeed": 1,
+      "seed": 0,
+      "rate": 14,
+      "rateOverDistance": 0,
+      "bursts": [],
+      "lifetime": [
+        6,
+        10
+      ],
+      "speed": [
+        0.01,
+        0.05
+      ],
+      "size": [
+        0.006,
+        0.014
+      ],
+      "rotation": [
+        0,
+        0
+      ],
+      "rotationSpeed": [
+        0,
+        0
+      ],
+      "color": [
+        0.9,
+        0.88,
+        0.8,
+        1
+      ],
+      "color2": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "gravity": 0,
+      "drag": 0,
+      "inheritVelocity": 0,
+      "shape": {
+        "type": "box",
+        "emitFrom": "volume",
+        "radius": 0.1,
+        "radiusThickness": 1,
+        "angle": 25,
+        "arc": 360,
+        "length": 1,
+        "box": [
+          4,
+          2.5,
+          4
+        ],
+        "offset": [
+          0,
+          0,
+          0
+        ],
+        "rotation": [
+          0,
+          0,
+          0
+        ],
+        "randomDirection": 0
+      },
+      "velocity": [
+        0,
+        0,
+        0
+      ],
+      "velocitySpace": "world",
+      "velocityCurve": {
+        "keys": []
+      },
+      "speedCurve": {
+        "keys": []
+      },
+      "sizeCurve": {
+        "keys": []
+      },
+      "colorGradient": {
+        "keys": [
+          {
+            "t": 0,
+            "r": 1,
+            "g": 1,
+            "b": 1,
+            "a": 0
+          },
+          {
+            "t": 0.2,
+            "r": 1,
+            "g": 1,
+            "b": 1,
+            "a": 0.55
+          },
+          {
+            "t": 0.8,
+            "r": 1,
+            "g": 1,
+            "b": 1,
+            "a": 0.55
+          },
+          {
+            "t": 1,
+            "r": 1,
+            "g": 1,
+            "b": 1,
+            "a": 0
+          }
+        ]
+      },
+      "noise": {
+        "strength": 0.06,
+        "frequency": 0.6,
+        "scrollSpeed": 0.15,
+        "octaves": 1
+      },
+      "flipbook": {
+        "tilesX": 1,
+        "tilesY": 1,
+        "mode": "lifetime",
+        "cycles": 1,
+        "fps": 15,
+        "startFrame": [
+          0,
+          0
+        ],
+        "blend": false
+      },
+      "render": {
+        "mode": "billboard",
+        "blend": "additive",
+        "texture": "Textures/soft_particle.png",
+        "lit": true,
+        "softDistance": 0,
+        "lengthScale": 2,
+        "velocityScale": 0,
+        "sort": "auto",
+        "emissive": 1.2,
+        "aspect": 1
+      },
+      "collision": {
+        "enabled": false,
+        "mode": "bounce",
+        "bounce": 0.4,
+        "dampen": 0.2,
+        "lifetimeLoss": 0,
+        "radius": 0.02,
+        "thickness": 0.5
+      },
+      "trails": {
+        "enabled": false,
+        "lifetime": 0.3,
+        "minDistance": 0.05,
+        "maxPoints": 16,
+        "width": 1,
+        "widthCurve": {
+          "keys": []
+        },
+        "colorGradient": {
+          "keys": []
+        },
+        "inheritColor": true,
+        "textureMode": "stretch"
+      }
+    }
+  ]
+}
