@@ -12,11 +12,12 @@ public class FootstepAudio : VortexBehaviour
     private Vector3 _last;
     private float _acc;
 
-    public override void Start() { _last = Position; }
+    // a child of the Player: its own Position never changes, the world position walks with the Player
+    public override void Start() { _last = WorldPosition; }
 
     public override void Update(float dt)
     {
-        Vector3 p = Position;
+        Vector3 p = WorldPosition;
         float dx = p.X - _last.X, dz = p.Z - _last.Z;
         _last = p;
         if (!Physics.Grounded) return;

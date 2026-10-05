@@ -12,8 +12,9 @@ public class Interactor : VortexBehaviour
 
     public override void Update(float dt)
     {
+        // a child of the Player: Position/Forward are relative to the Player, the ray needs the world pose
         RaycastHit hit;
-        bool interactable = Physics.Raycast(Position, Forward, Reach, out hit)
+        bool interactable = Physics.Raycast(WorldPosition, WorldForward, Reach, out hit)
                             && hit.Tag == "Interactable";
 
         if (interactable)
