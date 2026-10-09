@@ -8,6 +8,8 @@ public class FootstepAudio : VortexBehaviour
 {
     public float StepDistance = 2.1f;
     public float SprintStepDistance = 2.7f;
+    public float WalkLoudness   = 0.35f;   // AI Perception hears a noise when loudness x falloff beats its threshold
+    public float SprintLoudness = 1.0f;
 
     private Vector3 _last;
     private float _acc;
@@ -30,5 +32,7 @@ public class FootstepAudio : VortexBehaviour
 
         string clip = Physics.GroundStepSound(p, 4f);
         if (clip != "") Audio.PlayOneShot(clip, p, sprinting ? 1f : 0.7f);
+        // the monster hears you: every step is a noise for AI Perception — sprinting carries much further
+        Perception.MakeNoise(p, sprinting ? SprintLoudness : WalkLoudness, EntityId);
     }
 }

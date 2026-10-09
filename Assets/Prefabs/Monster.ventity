@@ -1,5 +1,5 @@
 {
-  "id": "9d7e2f10-4b3c-4a51-8e62-1f0a9b8c7801",
+  "id": "2c71395b-cf05-4894-bd0b-19aa766893a9",
   "name": "Monster",
   "isActive": true,
   "isStatic": false,
@@ -7,37 +7,49 @@
   "tag": "Monster",
   "children": [
     {
-      "id": "9d7e2f10-4b3c-4a51-8e62-1f0a9b8c7802",
-      "name": "Body",
+      "id": "a728aaff-69a0-43ee-9a0d-08d93594019a",
+      "name": "vanguard_Mesh",
       "isActive": true,
       "isStatic": false,
       "layer": 0,
       "tag": "Untagged",
-      "children": [ ],
+      "children": [],
       "components": [
         {
           "__type": "Transform",
-          "id": "9d7e2f10-4b3c-4a51-8e62-1f0a9b8c7803",
+          "id": "9a652814-8ce7-4774-9c55-74d9e47b306d",
           "isEnabled": true,
-          "localPosition": { "x": 0, "y": 1.15, "z": 0 },
-          "localRotation": { "x": 0, "y": 0, "z": 0 },
-          "localScale": { "x": 0.85, "y": 2.3, "z": 0.55 }
+          "localPosition": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "localRotation": {
+            "x": 0,
+            "y": 180,
+            "z": 0
+          },
+          "localScale": {
+            "x": 1,
+            "y": 1,
+            "z": 1
+          }
         },
         {
           "__type": "MeshRenderer",
-          "id": "9d7e2f10-4b3c-4a51-8e62-1f0a9b8c7804",
+          "id": "db1509ba-17be-4349-9fa4-f9b8b43d56b6",
           "isEnabled": true,
-          "meshPath": "Primitive:Cube",
+          "meshPath": "Assets/Models/Character/soldier.glb#submesh0",
           "materialPath": null,
           "castShadows": true,
-          "receiveShadows": false,
+          "receiveShadows": true,
           "renderLayer": 0,
-          "colorR": 0.04,
-          "colorG": 0.035,
-          "colorB": 0.05,
+          "colorR": 0.22,
+          "colorG": 0.2,
+          "colorB": 0.24,
           "colorA": 1,
           "metallic": 0,
-          "roughness": 1,
+          "roughness": 0.6,
           "normalStrength": 1,
           "texturePath": null,
           "shaderPath": null
@@ -45,24 +57,153 @@
       ],
       "isFolder": false,
       "prefabPath": null,
-      "isLockedToParent": false
+      "isLockedToParent": true
+    },
+    {
+      "id": "7c9cc497-c78b-4023-a057-88c0c5e65f76",
+      "name": "vanguard_visor",
+      "isActive": true,
+      "isStatic": false,
+      "layer": 0,
+      "tag": "Untagged",
+      "children": [],
+      "components": [
+        {
+          "__type": "Transform",
+          "id": "3f56ee2a-06b4-407a-8a6a-b3ef2629d53a",
+          "isEnabled": true,
+          "localPosition": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "localRotation": {
+            "x": 0,
+            "y": 180,
+            "z": 0
+          },
+          "localScale": {
+            "x": 1,
+            "y": 1,
+            "z": 1
+          }
+        },
+        {
+          "__type": "MeshRenderer",
+          "id": "0cbc7402-dbb7-4d10-a29e-ed93eccf1743",
+          "isEnabled": true,
+          "meshPath": "Assets/Models/Character/soldier.glb#submesh1",
+          "materialPath": null,
+          "castShadows": true,
+          "receiveShadows": true,
+          "renderLayer": 0,
+          "colorR": 0.22,
+          "colorG": 0.2,
+          "colorB": 0.24,
+          "colorA": 1,
+          "metallic": 0.3,
+          "roughness": 0.35,
+          "normalStrength": 1,
+          "texturePath": null,
+          "shaderPath": null
+        }
+      ],
+      "isFolder": false,
+      "prefabPath": null,
+      "isLockedToParent": true
     }
   ],
   "components": [
     {
       "__type": "Transform",
-      "id": "9d7e2f10-4b3c-4a51-8e62-1f0a9b8c7805",
+      "id": "9595185f-5668-4402-b6a3-a4ce99e3b637",
       "isEnabled": true,
-      "localPosition": { "x": 0, "y": 0, "z": 0 },
-      "localRotation": { "x": 0, "y": 0, "z": 0 },
-      "localScale": { "x": 1, "y": 1, "z": 1 }
+      "localPosition": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      },
+      "localRotation": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      },
+      "localScale": {
+        "x": 1,
+        "y": 1,
+        "z": 1
+      }
+    },
+    {
+      "__type": "Animator",
+      "id": "3617d562-3a02-4bc7-a3c4-fa2b00b73628",
+      "isEnabled": true,
+      "clips": [
+        {
+          "name": "idle",
+          "path": "Assets/Models/Character/animations/soldier_idle.vanim"
+        },
+        {
+          "name": "walk",
+          "path": "Assets/Models/Character/animations/soldier_walk.vanim"
+        },
+        {
+          "name": "run",
+          "path": "Assets/Models/Character/animations/soldier_run.vanim"
+        }
+      ],
+      "defaultClip": "idle",
+      "playOnStart": true,
+      "speed": 1,
+      "applyRootMotion": false,
+      "rootMotionBone": ""
+    },
+    {
+      "__type": "NavAgent",
+      "id": "a4b8e93d-b114-4719-95f7-85f168593105",
+      "isEnabled": true,
+      "speed": 1.6,
+      "acceleration": 8,
+      "angularSpeed": 240,
+      "radius": 0.4,
+      "height": 1.9,
+      "stoppingDistance": 0.5,
+      "autoBraking": true,
+      "avoidancePriority": 50,
+      "baseOffset": 0,
+      "updateRotation": true,
+      "resolveCollisions": true
+    },
+    {
+      "__type": "AIPerception",
+      "id": "a89de693-23e4-4508-80f8-2889feb7faf9",
+      "isEnabled": true,
+      "fieldOfView": 100,
+      "viewDistance": 18,
+      "eyeHeight": 1.65,
+      "hearingRange": 22,
+      "hearingThreshold": 0.15,
+      "targetTag": "Player",
+      "memorySeconds": 12,
+      "updateInterval": 0.1,
+      "sightConfirmTime": 0.3,
+      "proximityRadius": 1.5
+    },
+    {
+      "__type": "BehaviorTreeAgent",
+      "id": "551d2502-260c-4950-81ee-cae5185786bf",
+      "isEnabled": true,
+      "treePath": "Assets/AI/Monster.vbt",
+      "runOnStart": true,
+      "tickInterval": 0,
+      "logTasks": false
     },
     {
       "__type": "Script",
-      "id": "9d7e2f10-4b3c-4a51-8e62-1f0a9b8c7806",
+      "id": "7c83203d-5205-480d-a57d-884bf49de657",
       "isEnabled": true,
-      "scriptPath": "Assets/Scripts/World/MonsterStalker.cs",
-      "scriptClassName": "MonsterStalker"
+      "scriptPath": "Assets/Scripts/AI/MonsterBrain.cs",
+      "scriptClassName": "MonsterBrain"
     }
   ],
   "isFolder": false,

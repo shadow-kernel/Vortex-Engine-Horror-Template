@@ -1,0 +1,12 @@
+﻿{
+  "Guid": "e180cae8-3310-467a-ada6-f85bb7752f28",
+  "Type": 8,
+  "RelativePath": "Assets\/Scripts\/AI\/PatrolWalker.cs",
+  "FileName": "PatrolWalker.cs",
+  "ImportDate": "\/Date(1791575853439+0200)\/",
+  "LastModified": "\/Date(1791575853439+0200)\/",
+  "FileSize": 0,
+  "Dependencies": [ ],
+  "ImportSettings": { },
+  "Tags": [ ]
+}

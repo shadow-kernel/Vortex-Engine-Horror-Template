@@ -1,0 +1,66 @@
+{
+  "name": "Monster",
+  "version": 1,
+  "description": "The stalker's mind: chase the player on sight, investigate noises, search where the player was last seen or heard, otherwise walk the patrol route. Every leaf is a built-in task; MonsterBrain.cs (the Script on the prefab) reacts to the SendMessage nodes (clips, music, the catch).",
+  "blackboard": {
+    "CatchDistance": "1.4"
+  },
+  "root": {
+    "id": "root0001",
+    "kind": "selector",
+    "name": "Monster",
+    "children": [
+      {
+        "id": "chase001",
+        "kind": "sequence",
+        "name": "Chase",
+        "comment": "The player is in sight: run at them. The CanSee guard aborts the patrol / investigation the moment the player is seen (LowerPriority), and the chase itself when sight is lost (Self).",
+        "children": [
+          { "id": "chase002", "kind": "condition", "task": "CanSee", "abort": "both", "params": { "key": "Target" } },
+          { "id": "chase003", "kind": "task", "task": "SendMessage", "name": "tell: chase", "params": { "message": "bt.chase" } },
+          { "id": "chase004", "kind": "task", "task": "MoveTo", "name": "run at the player", "params": { "target": "Target", "acceptance": "{CatchDistance}", "speed": "4.6" } },
+          { "id": "chase005", "kind": "task", "task": "SendMessage", "name": "tell: catch", "params": { "message": "bt.catch" } },
+          { "id": "chase006", "kind": "task", "task": "Wait", "params": { "seconds": "1.2" } }
+        ]
+      },
+      {
+        "id": "inves001",
+        "kind": "sequence",
+        "name": "Investigate",
+        "comment": "A noise (sprinting footsteps, a shot): walk to where it came from and look around.",
+        "children": [
+          { "id": "inves002", "kind": "condition", "task": "HasHeard", "abort": "lowerPriority", "params": { "maxAge": "8", "key": "HeardAt" } },
+          { "id": "inves003", "kind": "task", "task": "SendMessage", "name": "tell: investigate", "params": { "message": "bt.investigate" } },
+          { "id": "inves004", "kind": "task", "task": "MoveTo", "name": "walk to the noise", "params": { "target": "HeardAt", "acceptance": "1.0", "speed": "2.6" } },
+          { "id": "inves005", "kind": "task", "task": "Wait", "name": "look around", "params": { "seconds": "2.5", "random": "1.5" } },
+          { "id": "inves006", "kind": "task", "task": "ForgetTarget", "params": { "key": "HeardAt" } }
+        ]
+      },
+      {
+        "id": "searc001",
+        "kind": "sequence",
+        "name": "Search",
+        "comment": "Sight was lost: go to where the player was last seen, wait, give up.",
+        "children": [
+          { "id": "searc002", "kind": "condition", "task": "LastKnownPosition", "params": { "key": "LastKnown" } },
+          { "id": "searc003", "kind": "task", "task": "SendMessage", "name": "tell: search", "params": { "message": "bt.search" } },
+          { "id": "searc004", "kind": "task", "task": "MoveTo", "name": "walk to the last known spot", "params": { "target": "LastKnown", "acceptance": "1.0", "speed": "3.2" } },
+          { "id": "searc005", "kind": "task", "task": "Wait", "params": { "seconds": "3", "random": "2" } },
+          { "id": "searc006", "kind": "task", "task": "ForgetTarget", "params": { "key": "Target" } }
+        ]
+      },
+      {
+        "id": "patro001",
+        "kind": "sequence",
+        "name": "Patrol",
+        "comment": "Nothing going on: the next waypoint of the MonsterPatrol route, then the route's wait time.",
+        "children": [
+          { "id": "patro002", "kind": "task", "task": "PatrolNext", "params": { "path": "MonsterPatrol", "key": "PatrolPoint", "waitKey": "PatrolWait" } },
+          { "id": "patro003", "kind": "task", "task": "SendMessage", "name": "tell: patrol", "params": { "message": "bt.patrol" } },
+          { "id": "patro004", "kind": "task", "task": "MoveTo", "name": "walk the route", "params": { "target": "PatrolPoint", "acceptance": "0.6", "speed": "1.6" } },
+          { "id": "patro005", "kind": "task", "task": "Wait", "params": { "seconds": "{PatrolWait}", "random": "1" } }
+        ]
+      }
+    ]
+  }
+}
