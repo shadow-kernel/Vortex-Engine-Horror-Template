@@ -610,7 +610,7 @@ public class CoDMovement : VortexBehaviour
     }
 
     /// <summary>Look for a climbable ledge in the move direction: a blocking face at knee height, a walkable top between
-    /// MantleMinHeight and MantleHeight above the feet, and standing room above it.</summary>
+    /// MantleMinHeight and MantleHeight above the feet, and room for the whole standing capsule on it.</summary>
     private bool TryFindLedge(float dirX, float dirZ, out Vector3 ledge)
     {
         ledge = Vector3.Zero;
@@ -620,14 +620,16 @@ public class CoDMovement : VortexBehaviour
         // probe the top just behind the face: thin cover (sandbags, low walls ~0.4 m) must still read as a ledge —
         // probing deeper ran past the back edge and found the ground behind it instead
         float tx = face.Point.X + dirX * 0.18f, tz = face.Point.Z + dirZ * 0.18f;
-        float topY = _feet.Y + MantleHeight + 0.4f;
+        Vector3 probe = new Vector3(tx, _feet.Y + MantleHeight + 0.4f, tz);
+        // the probe starts inside something (a wall taller than a ledge): no ledge — a ray from inside a collider passes it
+        if (Physics.OverlapPoint(probe).Length > 0) return false;
         RaycastHit top;
-        if (!Physics.Raycast(new Vector3(tx, topY, tz), new Vector3(0f, -1f, 0f), MantleHeight + 0.4f - MantleMinHeight, out top)) return false;
+        if (!Physics.Raycast(probe, new Vector3(0f, -1f, 0f), MantleHeight + 0.4f - MantleMinHeight, out top)) return false;
         float h = top.Point.Y - _feet.Y;
         if (h < MantleMinHeight || h > MantleHeight || top.Normal.Y < 0.7f) return false;
-        if (Physics.Raycast(new Vector3(tx, top.Point.Y + 0.1f, tz), Vector3.Up, CapsuleHeight - 0.05f)) return false;   // no headroom
         ledge = new Vector3(tx, top.Point.Y, tz);
-        return true;
+        // standing room: the whole standing capsule (EntityId excludes the player's own capsule, which overlaps it)
+        return Physics.CanStand(ledge, CapsuleRadius, CapsuleHeight, EntityId);
     }
 
     private void StartMantle(Vector3 ledge)
