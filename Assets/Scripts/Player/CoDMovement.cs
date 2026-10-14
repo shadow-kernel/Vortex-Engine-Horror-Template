@@ -621,8 +621,8 @@ public class CoDMovement : VortexBehaviour
         // probing deeper ran past the back edge and found the ground behind it instead
         float tx = face.Point.X + dirX * 0.18f, tz = face.Point.Z + dirZ * 0.18f;
         Vector3 probe = new Vector3(tx, _feet.Y + MantleHeight + 0.4f, tz);
-        // the probe starts inside something (a wall taller than a ledge): no ledge — a ray from inside a collider passes it
-        if (Physics.OverlapPoint(probe).Length > 0) return false;
+        // in front of a wall taller than a ledge the probe starts inside it and the ray passes the wall (#418): it finds
+        // nothing within reach, or a base the standing-room check below refuses
         RaycastHit top;
         if (!Physics.Raycast(probe, new Vector3(0f, -1f, 0f), MantleHeight + 0.4f - MantleMinHeight, out top)) return false;
         float h = top.Point.Y - _feet.Y;
