@@ -269,6 +269,10 @@ public static class EscMenu
         if (!_aInit)
         {
             _aInit = true; _aVs = !UserSettings.VSync; _aFs = !UserSettings.Fullscreen;
+            // the window keeps its size until the player actually changes the resolution / upscaler rows: starting
+            // from -1 applied the default 1920 x 1080 the first time the menu opened (the window jumped to twice its size)
+            _aRes = UserSettings.ResIndex; _aDlss = UserSettings.DlssMode; _aFg = UserSettings.FrameGen;
+            _aFov = UserSettings.Fov; _aRs = UserSettings.RenderScale;
             // the sliders start at the volumes the game already plays at (a shipped game restores the player's saved
             // choice at start) — writing the defaults above here used to overwrite them the first time
             UserSettings.MasterVolume = _aMv = Audio.GetBusVolume("Master");
