@@ -76,6 +76,7 @@ public static class PlayerRig
     // ---- player vitals (written by PlayerHealth, read by HudManager) ----
     public static float Health = 100f, MaxHealth = 100f;
     public static int   Medkits = 3;
+    public static bool  Dead;                      // from the killing hit to the respawn: no movement, no weapons
 
     // ---- ammo (written by PlayerWeapon, read by HudManager) ----
     public static int   Ammo = 30, MagSize = 30;
@@ -195,6 +196,7 @@ public class CoDMovement : VortexBehaviour
     // frame (eye height + lean offset). Deriving the feet back from the camera made the lean offset integrate into
     // movement — the player drifted sideways while leaning.
     private Vector3 _feet;
+    private Vector3 _spawnFeet; private float _spawnYaw, _spawnPitch;   // the scene's start point: where a respawn puts you
     private bool  _mantling; private float _mantleT; private Vector3 _mantleFrom, _mantleTo;
     private float _sprintOutT; private bool _wasSprinting;
     private float _stepSmooth;         // camera offset that eases out abrupt grounded height changes (curbs, stairs)
@@ -219,6 +221,8 @@ public class CoDMovement : VortexBehaviour
         _eyeCur = _standEyeY;
         _feet = new Vector3(Position.X, Position.Y - EyeHeight, Position.Z);
         Vector3 r = Rotation; _pitch = r.X; _yaw = r.Y;
+        _spawnFeet = _feet; _spawnYaw = _yaw; _spawnPitch = _pitch;
+        PlayerRig.Dead = false;
         _levelCapture = System.Environment.GetEnvironmentVariable("VM_LEVEL") == "1";   // capture-only: lock a clean level view
         _forceAds     = System.Environment.GetEnvironmentVariable("VM_ADS") == "1";     // capture-only: force aim-down-sight
         _lookDown     = System.Environment.GetEnvironmentVariable("VM_DOWN") == "1";    // capture-only: look down to check body awareness
@@ -254,6 +258,15 @@ public class CoDMovement : VortexBehaviour
             CameraFX.StopSway(0);
             EscMenu.Tick(dt);            // renders + (while focused) handles the sliders/toggles/tabs
             _vx = 0f; _vz = 0f;
+            return;
+        }
+        // dead (PlayerHealth): no control until the respawn — the view holds still while the screen fades out
+        if (PlayerRig.Dead)
+        {
+            _vx = 0f; _vy = 0f; _vz = 0f; _sliding = false; _tacSprint = false;
+            _wantAdsFov = false; _wantSprintFov = false; _wantTacFov = false;
+            PlayerRig.Speed = 0f; PlayerRig.IsSprinting = false; PlayerRig.IsSliding = false;
+            UpdateFov(dt);
             return;
         }
         if (!Input.WindowFocused) { _vx = 0f; _vz = 0f; UpdateFov(dt); return; }
@@ -638,6 +651,16 @@ public class CoDMovement : VortexBehaviour
         _vx = 0f; _vz = 0f; _vy = 0f; _sliding = false; _tacSprint = false;
         PlayerRig.Mantling = true;
         _dipPV += 28f; _dipYV -= 0.3f;   // the climb pulls the view (and the gun) down a touch
+    }
+
+    // PlayerHealth after a death: back to the scene's start point — standing, still, facing the way the scene began
+    public override void OnMessage(string message, object arg)
+    {
+        if (message != "respawn") return;
+        _feet = _spawnFeet; _yaw = _spawnYaw; _pitch = _spawnPitch;
+        _vx = 0f; _vy = 0f; _vz = 0f; _speedSmooth = 0f; _grounded = true;
+        _sliding = false; _mantling = false; PlayerRig.Mantling = false;
+        _capH = CapsuleHeight; _lowCeiling = false; _eyeCur = _standEyeY; _stepSmooth = 0f;
     }
 
     private static float Clamp01(float v) { return v < 0f ? 0f : (v > 1f ? 1f : v); }

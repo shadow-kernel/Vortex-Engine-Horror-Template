@@ -22,7 +22,7 @@ public class FootstepAudio : VortexBehaviour
         Vector3 p = WorldPosition;
         float dx = p.X - _last.X, dz = p.Z - _last.Z;
         _last = p;
-        if (!Physics.Grounded) return;
+        if (!Physics.Grounded || dx * dx + dz * dz > 4f) return;   // (a respawn is no step)
 
         _acc += (float)System.Math.Sqrt(dx * dx + dz * dz);
         bool sprinting = Input.GetKey("LeftShift");

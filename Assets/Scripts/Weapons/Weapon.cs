@@ -144,7 +144,7 @@ public abstract class Weapon : VortexBehaviour
         PlayerRig.CurrentSpread = CurrentSpread;
 
         if (Cooldown > 0f) Cooldown -= dt;
-        if (!Cursor.Locked) { PlayerRig.Firing = false; return; }   // paused / menu
+        if (!Cursor.Locked || PlayerRig.Dead) { PlayerRig.Firing = false; return; }   // paused / menu / dead
 
         if (PlayerRig.Ads != _adsPrev) { _adsPrev = PlayerRig.Ads; if (AdsSound != "") Audio.PlayOneShot2D(AdsSound, 0.35f, PlayerRig.Ads ? 1f : 0.92f); }
         if (PlayerRig.Switching) { PlayerRig.Firing = false; _fireHeld = Input.GetKey("LButton"); return; }   // hands busy with the swap

@@ -59,6 +59,7 @@ Every feature is a small, readable **project script** under `Assets/Scripts/` �
 | `Player/ViewmodelRig` | …the **procedural CoD-style viewmodel**: camera-space weapon poses (hip / ADS / sprint / reload), look sway, walk bob, breathing, recoil spring; pins the (hidden) shoulders below the eye so the arms enter from the bottom corners, IKs BOTH hands onto the weapon (auto-grip computed from the rig's hand geometry: palm on the grip, fingers wrapped, support hand cupping the handguard), hides torso/head/legs. No first-person animation clips needed. |
 | `Weapons/Weapon` · `Firearm` · `AssaultRifle` · `Pistol` · `Knife` · `WeaponLoadout` | The weapon system (classes + inheritance, one loadout object spawning an FP and a 3P copy of each weapon prefab): fire/ADS/reload logic, ammo, per-prefab viewmodel poses + grip points, shot feedback (viewmodel + camera kick, muzzle flash light + mesh, ejected shells), reload choreography with sound cues. See `WEAPONS_GUIDE.md`. |
 | `Player/FlashlightController` | F-toggle weapon light, battery drain/recharge, flicker, HUD bar — casts **real shadows** |
+| `Player/PlayerHealth` | On the Player, next to the movement: health, med-kits (**H**), slow regen. Every `"damage"` sent to the player lands here (the monster's catch); at zero the screen fades to *YOU DIED* and you respawn at the scene's start with full health and med-kits |
 | `Player/Interactor` / `Player/FootstepAudio` | `[E]` interaction; material-driven footsteps (floor material's footstep clip) |
 | `World/SlidingDoor` | Coroutine slide + `Physics.RefreshCollider` so the doorway really opens |
 | `World/LightFlicker` | Per-bulb nervous flicker + blackout blinks; generator hum-pulse mode |
@@ -81,7 +82,7 @@ the scene: no script needed, and the effects apply to the game camera only (the 
 | `Yard` (start scene) | Open night compound: perimeter wall + gate, entry road with a guard house and a barrier checkpoint, three lanes of cover (containers, road barriers, crates, barrels), a loading dock, warehouse A (brick, open front) and warehouse B (concrete, roller doors) with interiors, an outdoor storage yard and a dirt strip with rocks and dead trees. Lit by a dim blue moon (soft shadows), warm street lamps, cold security spots and interior lights, with fog / bloom / vignette / grain. Props are CC0 glTF models from [Poly Haven](https://polyhaven.com) (`Assets/Models/Props`, each with a box collider); ground and walls use CC0 PBR texture sets (`Assets/Textures`, materials in `Assets/Materials`). |
 | `Demo` | The original closed brick cellar (generator hall, side stores, sliding doors, flickering bulbs). |
 
-Both scenes contain the same **Player** rig (camera + movement, `FP_Arms`, `WCharakter`, `Loadout`), so anything
+Both scenes contain the same **Player** rig (camera + movement + health, `FP_Arms`, `WCharakter`, `Loadout`), so anything
 you change on the player works in both — copy the `Player` entity into your own scene to start from it.
 
 ### Physics

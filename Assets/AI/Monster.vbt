@@ -1,9 +1,9 @@
 {
   "name": "Monster",
   "version": 1,
-  "description": "The stalker's mind: chase the player on sight, investigate noises, search where the player was last seen or heard, otherwise walk the patrol route. Every leaf is a built-in task; MonsterBrain.cs (the Script on the prefab) reacts to the SendMessage nodes (clips, music, the catch).",
+  "description": "The stalker's mind: chase the player on sight, investigate noises, search where the player was last seen or heard, otherwise walk the patrol route. The sight and hearing guards are DECORATORS directly under the root selector, so their aborts cut a patrol leg or a search the moment they pass. Every leaf is a built-in task; MonsterBrain.cs (the Script on the prefab) reacts to the SendMessage nodes (clips, music, the catch).",
   "blackboard": {
-    "CatchDistance": "1.4"
+    "CatchDistance": "2.2"
   },
   "root": {
     "id": "root0001",
@@ -11,29 +11,38 @@
     "name": "Monster",
     "children": [
       {
-        "id": "chase001",
-        "kind": "sequence",
-        "name": "Chase",
-        "comment": "The player is in sight: run at them. The CanSee guard aborts the patrol / investigation the moment the player is seen (LowerPriority), and the chase itself when sight is lost (Self).",
+        "id": "chase002", "kind": "condition", "task": "CanSee", "name": "the player in sight?", "abort": "both", "params": { "key": "Target" },
+        "comment": "A guard with a subtree: observed from the selector, it aborts the patrol / investigation the moment the player is seen (LowerPriority), and the chase itself when sight is lost (Self). (As the first step of the Chase sequence it was only checked when the selector started over — the monster walked a whole patrol leg past the player.)",
         "children": [
-          { "id": "chase002", "kind": "condition", "task": "CanSee", "abort": "both", "params": { "key": "Target" } },
-          { "id": "chase003", "kind": "task", "task": "SendMessage", "name": "tell: chase", "params": { "message": "bt.chase" } },
-          { "id": "chase004", "kind": "task", "task": "MoveTo", "name": "run at the player", "params": { "target": "Target", "acceptance": "{CatchDistance}", "speed": "4.6" } },
-          { "id": "chase005", "kind": "task", "task": "SendMessage", "name": "tell: catch", "params": { "message": "bt.catch" } },
-          { "id": "chase006", "kind": "task", "task": "Wait", "params": { "seconds": "1.2" } }
+          {
+            "id": "chase001",
+            "kind": "sequence",
+            "name": "Chase",
+            "comment": "The player is in sight: run at them, catch them within reach. MoveTo measures CatchDistance from the monster's feet to the Player entity, which is the camera at eye height (1.7 m): 2.2 is a reach of about 1.5 m — 1.4 could never be met.",
+            "children": [
+              { "id": "chase003", "kind": "task", "task": "SendMessage", "name": "tell: chase", "params": { "message": "bt.chase" } },
+              { "id": "chase004", "kind": "task", "task": "MoveTo", "name": "run at the player", "params": { "target": "Target", "acceptance": "{CatchDistance}", "speed": "4.6" } },
+              { "id": "chase005", "kind": "task", "task": "SendMessage", "name": "tell: catch", "params": { "message": "bt.catch" } },
+              { "id": "chase006", "kind": "task", "task": "Wait", "params": { "seconds": "1.2" } }
+            ]
+          }
         ]
       },
       {
-        "id": "inves001",
-        "kind": "sequence",
-        "name": "Investigate",
-        "comment": "A noise (sprinting footsteps, a shot): walk to where it came from and look around.",
+        "id": "inves002", "kind": "condition", "task": "HasHeard", "name": "a noise?", "abort": "lowerPriority", "params": { "maxAge": "8", "key": "HeardAt" },
         "children": [
-          { "id": "inves002", "kind": "condition", "task": "HasHeard", "abort": "lowerPriority", "params": { "maxAge": "8", "key": "HeardAt" } },
-          { "id": "inves003", "kind": "task", "task": "SendMessage", "name": "tell: investigate", "params": { "message": "bt.investigate" } },
-          { "id": "inves004", "kind": "task", "task": "MoveTo", "name": "walk to the noise", "params": { "target": "HeardAt", "acceptance": "1.0", "speed": "2.6" } },
-          { "id": "inves005", "kind": "task", "task": "Wait", "name": "look around", "params": { "seconds": "2.5", "random": "1.5" } },
-          { "id": "inves006", "kind": "task", "task": "ForgetTarget", "params": { "key": "HeardAt" } }
+          {
+            "id": "inves001",
+            "kind": "sequence",
+            "name": "Investigate",
+            "comment": "A noise (sprinting footsteps, a shot): walk to where it came from and look around.",
+            "children": [
+              { "id": "inves003", "kind": "task", "task": "SendMessage", "name": "tell: investigate", "params": { "message": "bt.investigate" } },
+              { "id": "inves004", "kind": "task", "task": "MoveTo", "name": "walk to the noise", "params": { "target": "HeardAt", "acceptance": "1.0", "speed": "2.6" } },
+              { "id": "inves005", "kind": "task", "task": "Wait", "name": "look around", "params": { "seconds": "2.5", "random": "1.5" } },
+              { "id": "inves006", "kind": "task", "task": "ForgetTarget", "params": { "key": "HeardAt" } }
+            ]
+          }
         ]
       },
       {
