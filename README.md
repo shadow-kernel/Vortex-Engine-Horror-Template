@@ -41,6 +41,7 @@ or grow into your own game.
 | **R** | reload |
 | **F** | weapon flashlight on/off (battery drains) |
 | **E** | interact — open a sliding bunker door |
+| **H** | med-kit: +60 health (three at the start, the count sits on the HUD; health also creeps back after 5 s without a hit) |
 | **ESC** | settings menu (sensitivity, FOV, aim toggle, audio, video) |
 | **P** (play in the editor / dev builds) | **free camera**: fly around and watch your character in third person (WASD, Q/E down/up, Shift faster, mouse look). **Caps Lock** hands the controls back to the player while the camera stays put — walk, sprint, aim and shoot and watch yourself. **P** again returns to first person. Not available in exported release builds. |
 

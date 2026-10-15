@@ -1016,6 +1016,13 @@
       "isEnabled": true,
       "scriptPath": "Assets\/Scripts\/Player\/CoDMovement.cs",
       "scriptClassName": "CoDMovement"
+    },
+    {
+      "__type": "Script",
+      "id": "9831351a-c317-43b1-bcbd-bf3386990ece",
+      "isEnabled": true,
+      "scriptPath": "Assets\/Scripts\/Player\/PlayerHealth.cs",
+      "scriptClassName": "PlayerHealth"
     }
   ],
   "isFolder": false,
